@@ -33,10 +33,11 @@ yarn lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+
 ## Contribution
 ### Committing
 
-Requires that all commits are made using [AngularJS's commit message convention](ya).
+Requires that all commits are made using [AngularJS's commit message convention](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines).
 
 There are multiple ways to adhere to this requirement. Choose the one that best suites your workflow:
 
