@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  painite:
+    image: eztekdocker.azurecr.io/painite
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    ## set your startup file here
+    command: [nginx-debug, '-g', 'daemon off;']
