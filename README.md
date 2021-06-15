@@ -30,7 +30,7 @@ yarn test:e2e
 yarn lint
 ```
 
-### Docker build and push
+### Docker build & push
 ```
 docker login eztekdocker.azurecr.io --username xxx --password yyy
 
@@ -39,7 +39,7 @@ docker-compose build
 docker push eztekdocker.azurecr.io/painite:latest
 ```
 
-### Release on server:
+### Release on server
 
 ```
 sudo bash ./vue-redeploy.sh
