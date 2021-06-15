@@ -20,7 +20,7 @@ export default {
     HTTP.get(`todos`)
       .then((response) => {
         this.posts = response.data;
-        console.log("Kích hoạt Axios thành công");
+        console.log(this.posts);
       })
       .catch((e) => {
         console.log("Có lỗi khi load dữ liệu", e);
