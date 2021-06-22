@@ -4,7 +4,7 @@
       <v-col xs="11" sm="8" lg="6" class="mx-auto mt-5 mb-20">
         <v-card>
           <v-container>
-            <div class="resize-form mx-auto">
+            <div class="mx-auto">
               <v-card-title class="pb-0 card-title">
                 <h1 class="heading">Welcome back!</h1>
               </v-card-title>
@@ -22,6 +22,8 @@
                     class="input mx-auto"
                     v-model="password"
                     required
+                    :rules="passwordRules"
+                    counter
                     :type="showPassword ? 'text' : 'password'"
                     label="Password"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -61,6 +63,7 @@ export default {
       showPassword: false,
       email: "",
       password: "",
+      passwordRules: [(value) => value.length >= 8 || "Min 8 characters"],
     };
   },
   methods: {
