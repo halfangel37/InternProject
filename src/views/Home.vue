@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <h1>Ngọc Tỷ siêu dễ thương nhất hệ mặt trời</h1>
+  </div>
 </template>
 
 <script>
