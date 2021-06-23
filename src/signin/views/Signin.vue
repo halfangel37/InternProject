@@ -1,12 +1,19 @@
 <template>
   <v-app class="h-100per bg-main">
-    <SignForm @signin-click="signin" />
+    <v-row>
+      <v-col xs="11" sm="8" lg="6" class="mx-auto mt-5 mb-20">
+        <v-card>
+          <v-container>
+            <SignForm @signin-click="signin" />
+          </v-container>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-app>
 </template>
 
 <script>
-import SignForm from "../components/SigninForm.vue";
-
+import SignForm from "@/signin/components/SigninForm.vue";
 import NProgress from "nprogress";
 export default {
   components: { SignForm },
@@ -16,7 +23,7 @@ export default {
     signin(email, password) {
       NProgress.start();
       this.$store
-        .dispatch("signin", {
+        .dispatch("signin/signinAccount", {
           username: email,
           password: password,
         })
@@ -26,6 +33,7 @@ export default {
         })
         .catch((err) => {
           this.error = err.response.data.error;
+          alert("Account was wrong!");
           NProgress.done();
         });
     },

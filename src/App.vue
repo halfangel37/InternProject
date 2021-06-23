@@ -1,8 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar class="nav-bar" app color="primary" dark>
-      <v-btn text rounded :to="'/signin'">Signin</v-btn>
-    </v-app-bar>
     <v-main class="">
       <Layout />
       <router-view />
@@ -12,9 +9,28 @@
 
 <script>
 import Layout from "@/views/Layout.vue";
+//import axios from "axios";
 export default {
   name: "App",
   components: { Layout },
+  created() {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      const userData = JSON.parse(userString);
+      this.$store.commit("SET_USER_DATA", userData);
+    } else {
+      this.$router.push({ name: "Signin" });
+    }
+    this.HTTP.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response.status === 401) {
+          this.$store.dispatch("signout");
+        }
+        return Promise.reject(error);
+      }
+    );
+  },
 };
 </script>
 <style scoped>
