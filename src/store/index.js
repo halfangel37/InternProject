@@ -11,8 +11,8 @@ export default new Vuex.Store({
   state: { user: null },
   mutations: {
     SET_USER_DATA(state, userData) {
-      state.user = userData;
-      localStorage.setItem("user", JSON.stringify(userData));
+      //state.user = userData;
+      //localStorage.setItem("user", JSON.stringify(userData));
       HTTP.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${userData.token}`;
@@ -20,13 +20,9 @@ export default new Vuex.Store({
   },
   actions: {
     signin({ commit }, credentials) {
-      return HTTP.post("/auth/authenticate", credentials)
-        .then(({ data }) => {
-          commit("SET_USER_DATA", data);
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
+      return HTTP.post("/auth/authenticate", credentials).then(({ data }) => {
+        commit("SET_USER_DATA", data);
+      });
     },
   },
   modules: {},
