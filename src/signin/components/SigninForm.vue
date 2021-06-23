@@ -2,7 +2,7 @@
   <div>
     <div class="mx-auto">
       <v-card-title class="pb-0 card-title">
-        <h1 class="heading">Welcome back!</h1>
+        <h1 class="heading mx-auto">Welcome back!</h1>
       </v-card-title>
       <v-card-text>
         <v-form ref="signInForm" class="mx-auto">
@@ -13,14 +13,15 @@
             required
             :rules="emailRules"
             label="Username"
+            dense
           />
           <v-text-field
+            dense
             outlined
             class="mx-auto"
             v-model="password"
             required
             :rules="passwordRules"
-            counter
             :type="showPassword ? 'text' : 'password'"
             label="Password"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -28,17 +29,24 @@
           />
         </v-form>
         <div class="mt-5">
-          <a href="/forgot-password"><span>Forgot password?</span></a>
+          <router-link to="/forgot-password"
+            ><span>Forgot password?</span></router-link
+          >
         </div>
         <v-checkbox label="Remember me" v-model="rememberPassword" />
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="signin" class="signin" :disabled="isAddButtonDisabled"
+        <v-btn
+          @click="signin"
+          class="signin white--text"
+          :disabled="isAddButtonDisabled"
           >SIGN IN</v-btn
         >
-        <span class="mt-10 d-flex j-center"
-          ><a href="/signup"><span class="fz-12">Sign up</span></a></span
-        >
+        <span class="mt-10 d-flex j-center">
+          <router-link to="/auth/signup"
+            ><span class="fz-12">Sign up</span></router-link
+          >
+        </span>
       </v-card-actions>
     </div>
   </div>
@@ -46,17 +54,20 @@
 
 <script>
 export default {
+  props: {
+    isAddButtonDisabled: Boolean,
+  },
   data() {
     return {
       showPassword: false,
       email: "",
       password: "",
-      isAddButtonDisabled: false,
       passwordRules: [
         // eslint-disable-next-line no-unused-vars
         (value) => (value) => !!value || "Password is required",
         (value) =>
-          (value && value.length > 2) || "Name must be less than 2 characters",
+          (value && value.length > 2) ||
+          "Password must be more than 2 characters",
       ],
       emailRules: [
         // eslint-disable-next-line no-unused-vars
@@ -68,8 +79,8 @@ export default {
   methods: {
     signin() {
       if (this.$refs.signInForm.validate()) {
-        this.$emit("signin-click", this.email, this.password);
         this.isAddButtonDisabled = true;
+        this.$emit("signin-click", this.email, this.password);
       }
     },
   },

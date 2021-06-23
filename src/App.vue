@@ -1,18 +1,20 @@
 <template>
   <v-app>
     <v-main class="">
-      <Layout />
+      <HeaderLayout />
       <router-view />
+      <FooterLayout />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Layout from "@/views/Layout.vue";
+import HeaderLayout from "@/views/HeaderLayout.vue";
+import FooterLayout from "@/views/FooterLayout.vue";
 //import axios from "axios";
 export default {
   name: "App",
-  components: { Layout },
+  components: { HeaderLayout, FooterLayout },
   created() {
     const userString = localStorage.getItem("user");
     if (userString) {

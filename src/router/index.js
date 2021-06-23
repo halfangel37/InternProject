@@ -26,7 +26,7 @@ const routes = [
   },
   {
     path: "/auth/signup",
-    name: "Signin",
+    name: "SignUp",
   },
 ];
 
