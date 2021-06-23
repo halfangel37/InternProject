@@ -5,15 +5,14 @@
         <h1 class="heading">Welcome back!</h1>
       </v-card-title>
       <v-card-text>
-        <v-form class="mx-auto">
+        <v-form ref="signInForm" class="mx-auto">
           <v-text-field
             outlined
             class="mt-40 mx-auto"
             v-model="email"
             required
-            :error-messages="emailErrors"
+            :rules="emailRules"
             label="Username"
-            @blur="$v.email.$touch()"
           />
           <v-text-field
             outlined
@@ -46,39 +45,32 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
 export default {
-  mixins: [validationMixin],
-  validations: {
-    email: { required, email },
-  },
   data() {
     return {
       showPassword: false,
       email: "",
       password: "",
       isAddButtonDisabled: false,
-      rememberPassword: Boolean,
-      passwordRules: [(value) => value.length >= 3 || "Min 3 characters"],
+      passwordRules: [
+        // eslint-disable-next-line no-unused-vars
+        (value) => (value) => !!value || "Password is required",
+        (value) =>
+          (value && value.length > 2) || "Name must be less than 2 characters",
+      ],
+      emailRules: [
+        // eslint-disable-next-line no-unused-vars
+        (value) => (value) => !!value || "E-mail is required",
+        (value) => /.+@.+\..+/.test(value) || "E-mail must be valid",
+      ],
     };
   },
   methods: {
     signin() {
-      this.$v.$touch();
-      if (this.emailErrors.length < 1) {
+      if (this.$refs.signInForm.validate()) {
         this.$emit("signin-click", this.email, this.password);
         this.isAddButtonDisabled = true;
       }
-    },
-  },
-  computed: {
-    emailErrors() {
-      const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push("Must be valid e-mail");
-      !this.$v.email.required && errors.push("E-mail is required");
-      return errors;
     },
   },
 };
