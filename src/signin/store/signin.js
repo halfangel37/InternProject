@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+//import HTTP from '@/http-common.js';
 Vue.use(Vuex);
 export const HTTP = axios.create({
   baseURL: `http://intern-2021.southeastasia.cloudapp.azure.com:4000/api/v1`,

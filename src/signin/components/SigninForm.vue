@@ -1,19 +1,23 @@
-<template class="h-300">
-  <div>
-    <div class="mx-auto">
+<template>
+  <v-card :width="width" class="mx-auto">
+    <div class="padding-card">
       <v-card-title class="pb-0 card-title">
         <h1 class="heading mx-auto">Welcome back!</h1>
       </v-card-title>
       <v-card-text>
-        <v-form ref="signInForm" class="mx-auto">
+        <v-alert v-if="errorMessage && errorMessage != 'null'" type="error">
+          {{ errorMessage }}
+        </v-alert>
+        <v-form @submit.prevent="onSubmit()" ref="signInForm" class="mx-auto">
           <v-text-field
             outlined
-            class="mt-40 mx-auto"
+            class="mx-auto"
             v-model="email"
             required
             :rules="emailRules"
             label="Username"
             dense
+            type="email"
           />
           <v-text-field
             dense
@@ -27,35 +31,34 @@
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
           />
+          <v-btn
+            type="submit"
+            class="signin white--text"
+            :disabled="isButtonDisabled"
+            >SIGN IN</v-btn
+          >
+          <span class="mt-10 pb-5 d-flex j-center">
+            <router-link to="/auth/signup"
+              ><span class="fz-12">Sign up</span></router-link
+            >
+          </span>
         </v-form>
         <div class="mt-5">
           <router-link to="/forgot-password"
             ><span>Forgot password?</span></router-link
           >
         </div>
-        <v-checkbox label="Remember me" v-model="rememberPassword" />
+        <v-checkbox label="Remember me" />
       </v-card-text>
-      <v-card-actions>
-        <v-btn
-          @click="signin"
-          class="signin white--text"
-          :disabled="isAddButtonDisabled"
-          >SIGN IN</v-btn
-        >
-        <span class="mt-10 d-flex j-center">
-          <router-link to="/auth/signup"
-            ><span class="fz-12">Sign up</span></router-link
-          >
-        </span>
-      </v-card-actions>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
 export default {
   props: {
-    isAddButtonDisabled: Boolean,
+    isButtonDisabled: Boolean,
+    errorMessage: String,
   },
   data() {
     return {
@@ -63,24 +66,38 @@ export default {
       email: "",
       password: "",
       passwordRules: [
-        // eslint-disable-next-line no-unused-vars
-        (value) => (value) => !!value || "Password is required",
+        (value) => !!value || "Password is required",
         (value) =>
           (value && value.length > 2) ||
           "Password must be more than 2 characters",
       ],
       emailRules: [
-        // eslint-disable-next-line no-unused-vars
-        (value) => (value) => !!value || "E-mail is required",
+        (value) => !!value || "E-mail is required",
         (value) => /.+@.+\..+/.test(value) || "E-mail must be valid",
       ],
     };
   },
   methods: {
-    signin() {
+    onSubmit() {
       if (this.$refs.signInForm.validate()) {
-        this.isAddButtonDisabled = true;
-        this.$emit("signin-click", this.email, this.password);
+        this.isButtonDisabled = true;
+        this.$emit("submit", { email: this.email, password: this.password });
+      }
+    },
+  },
+  computed: {
+    width() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "270px";
+        case "sm":
+          return "500px";
+        case "md":
+          return "700px";
+        case "lg":
+          return "800px";
+        default:
+          return "800px";
       }
     },
   },
@@ -88,6 +105,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-alert {
+  margin-top: 20px;
+}
 .heading {
   font-family: Open Sans;
   font-style: normal;
@@ -128,5 +148,59 @@ v-checkbox {
 }
 .fz-12 {
   font-size: 12px;
+}
+.v-card__text {
+  padding: 0;
+}
+.pd-20 {
+  padding: 20px;
+}
+.heading {
+  color: #4f2566;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+@media screen and (min-width: 240px) {
+  .v-form {
+    margin-top: 10px;
+  }
+  .heading {
+    font-size: 24px;
+  }
+  .padding-card {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  .card-title {
+    padding-top: 5px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .v-form {
+    margin-top: 20px;
+  }
+  .heading {
+    font-size: 30px;
+  }
+  .padding-card {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+  .card-title {
+    padding-top: 40px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .v-form {
+    margin-top: 40px;
+  }
+  .heading {
+    font-size: 40px;
+  }
+  .padding-card {
+    margin-left: 130px;
+    margin-right: 130px;
+  }
 }
 </style>
