@@ -4,7 +4,7 @@ import * as signin from "@/signin/store/signin.js";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: { user: "" },
+  state: {},
   mutations: {},
   actions: {},
   modules: { signin },

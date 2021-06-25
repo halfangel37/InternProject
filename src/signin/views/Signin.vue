@@ -22,6 +22,13 @@ export default {
       errorMessage: "",
     };
   },
+  computed: {
+    test() {
+      const test = localStorage.getState().token;
+      console.log(test);
+      return test;
+    },
+  },
   methods: {
     signin(infor) {
       this.isButtonDisabled = true;
@@ -32,7 +39,7 @@ export default {
           password: infor.password,
         })
         .then(() => {
-          this.$router.push({ name: "About" });
+          this.$router.push({ path: "/companies" });
           NProgress.done();
         })
         .catch((err) => {
