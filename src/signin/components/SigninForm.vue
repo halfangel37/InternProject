@@ -1,8 +1,8 @@
 <template>
-  <v-card :width="width" class="mx-auto">
+  <v-card :width="width" class="mx-auto border-radius-20">
     <div class="padding-card">
       <v-card-title class="pb-0 card-title">
-        <h1 class="heading mx-auto">Welcome back!</h1>
+        <h1 class="heading mx-auto">Welcome</h1>
       </v-card-title>
       <v-card-text>
         <v-alert v-if="errorMessage && errorMessage != 'null'" type="error">
@@ -31,6 +31,12 @@
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
           />
+          <div class="mt-5">
+            <router-link to="/forgot-password"
+              ><span>Forgot password?</span></router-link
+            >
+          </div>
+          <v-checkbox label="Remember me" />
           <v-btn
             type="submit"
             class="signin white--text"
@@ -43,12 +49,6 @@
             >
           </span>
         </v-form>
-        <div class="mt-5">
-          <router-link to="/forgot-password"
-            ><span>Forgot password?</span></router-link
-          >
-        </div>
-        <v-checkbox label="Remember me" />
       </v-card-text>
     </div>
   </v-card>
@@ -95,9 +95,9 @@ export default {
         case "md":
           return "700px";
         case "lg":
-          return "800px";
+          return "980px";
         default:
-          return "800px";
+          return "980px";
       }
     },
   },
@@ -161,6 +161,9 @@ v-checkbox {
 .mb-10 {
   margin-bottom: 10px;
 }
+.border-radius-20 {
+  border-radius: 20px !important;
+}
 @media screen and (min-width: 240px) {
   .v-form {
     margin-top: 10px;
@@ -199,8 +202,10 @@ v-checkbox {
     font-size: 40px;
   }
   .padding-card {
-    margin-left: 130px;
-    margin-right: 130px;
+    margin-left: 200px;
+    margin-right: 200px;
+    padding-top: 30px;
+    padding-bottom: 40px;
   }
 }
 </style>

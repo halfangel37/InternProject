@@ -1,7 +1,7 @@
 <template>
   <div class="bg-main">
     <footer>
-      <div class="d-flex j-center pt-10">
+      <div class="d-flex j-center">
         <span>
           <router-link to="/contact" class="contact"
             ><span class="fs-16">Contact Us</span></router-link

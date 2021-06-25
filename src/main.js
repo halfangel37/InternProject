@@ -12,13 +12,13 @@ new Vue({
   router,
   store,
   created() {
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      const userData = JSON.parse(userString);
-      this.$store.commit("SET_USER_DATA", userData);
-    } else {
-      this.$router.push({ path: "/auth/signin" });
-    }
+    //const userString = localStorage.getItem("user");
+    //if (userString) {
+    // const userData = JSON.parse(userString);
+    // this.$store.commit("SET_USER_DATA", userData);
+    //} else {
+    this.$router.push({ path: "/auth/signin" });
+    //}
     axios.interceptors.response.use(
       (response) => response,
       (error) => {

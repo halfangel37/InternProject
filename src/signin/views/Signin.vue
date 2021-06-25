@@ -1,14 +1,12 @@
 <template>
-  <div class="bg-main d-flex align-item-center fill-height o-flow-hiden">
-    <v-row>
-      <v-col class="mx-auto okela0">
-        <SignForm
-          @submit="signin"
-          v-bind:isButtonDisabled="isButtonDisabled"
-          v-bind:errorMessage="errorMessage"
-        />
-      </v-col>
-    </v-row>
+  <div class="bg-main changhe d-flex align-item-center j-center">
+    <v-col class="mx-auto">
+      <SignForm
+        @submit="signin"
+        v-bind:isButtonDisabled="isButtonDisabled"
+        v-bind:errorMessage="errorMessage"
+      />
+    </v-col>
   </div>
 </template>
 
@@ -49,6 +47,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.d-flex {
+  display: flex;
+}
+.align-item-center {
+  align-items: center;
+}
+.j-center {
+  justify-content: center;
+}
 .v-main__.v-application--wrap v-application--wrap {
   min-height: none !important;
   max-width: none !important;
@@ -70,13 +77,5 @@ export default {
 }
 .o-flow-hiden {
   overflow: hidden;
-}
-.fill-height {
-  height: 100%;
-}
-@media screen and (min-width: 768px) {
-  .fill-height {
-    height: 94.4%;
-  }
 }
 </style>
