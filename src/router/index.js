@@ -62,16 +62,14 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
 router.beforeEach((routeTo, routeFrom, next) => {
-  const userToken = localStorage.getItem("user");
-  if (routeTo.matched.some((record) => record.meta.requiresAuth)) {
-    if (!userToken) {
-      next({
-        path: "/signin",
-      });
-    } else {
-      next();
-    }
+  const userToken = localStorage.getItem("token");
+  if (
+    routeTo.matched.some((record) => record.meta.requiresAuth) &&
+    !userToken
+  ) {
+    next({ path: "/auth/signin" });
   } else {
     next();
   }

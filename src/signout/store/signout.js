@@ -9,16 +9,14 @@ export const HTTP = axios.create({
 export const namespaced = true;
 
 export const mutations = {
-  SET_USER_DATA(state, userData) {
-    const token = userData.token;
-    localStorage.setItem("token", token);
+  CLEAR_USER_DATA() {
+    localStorage.removeItem("token");
+    location.reload();
   },
 };
 
 export const actions = {
-  signinAccount({ commit }, credentials) {
-    return HTTP.post("/auth/authenticate", credentials).then(({ data }) => {
-      commit("SET_USER_DATA", data);
-    });
+  signoutAccount({ commit }) {
+    commit("CLEAR_USER_DATA");
   },
 };

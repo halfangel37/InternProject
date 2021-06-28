@@ -73,7 +73,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn id="hide-option" color="#f5f5f5"
+      <v-btn @click="signout" id="hide-option" color="#f5f5f5"
         ><v-icon color="#f2b334">{{ icons.mdiLogoutVariant }}</v-icon></v-btn
       >
     </v-app-bar>
@@ -123,6 +123,13 @@ export default {
       },
     ],
   }),
+  methods: {
+    signout() {
+      this.$store
+        .dispatch("signout/signoutAccount")
+        .then(this.$route.push({ path: "/auth/signin" }));
+    },
+  },
 };
 </script>
 <style>
