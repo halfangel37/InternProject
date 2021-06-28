@@ -21,7 +21,7 @@
       type="name"
       outlined
       dense
-      :rules="[rules.required]"
+      :rules="nameRules"
     />
     <v-text-field
       v-model="userInfor.lastName"
@@ -29,10 +29,10 @@
       type="name"
       outlined
       dense
-      :rules="[rules.required]"
+      :rules="nameRules"
     />
     <v-text-field
-      :rules="[rules.required, rules.min, rules.space]"
+      :rules="passwordRules"
       v-model="userInfor.password"
       label="Password"
       outlined
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import validators from "@/shared/form-validators";
 export default {
   props: ["errorMessage", "successMessage"],
   data: () => ({
@@ -80,15 +81,15 @@ export default {
     },
     formValidity: false,
     emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      (v) => !/[ ]/.test(v) || "No spaces allowed",
+      validators.required("E-mail is required"),
+      validators.email("E-mail must be valid"),
+      validators.space("No spaces allowed"),
     ],
-    rules: {
-      required: (value) => !!value || "This field is required.",
-      min: (v) => (v && v.length >= 6) || "Min 6 characters",
-      space: (v) => !/[ ]/.test(v) || "No spaces allowed",
-    },
+    nameRules: [validators.required("Name is required")],
+    passwordRules: [
+      validators.required("Password is required"),
+      validators.min("Min 6 characters", 6),
+    ],
   }),
   methods: {
     validateForm() {
