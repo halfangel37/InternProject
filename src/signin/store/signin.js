@@ -11,7 +11,7 @@ export const namespaced = true;
 export const mutations = {
   SET_USER_DATA(state, userData) {
     const token = userData.token;
-    localStorage.setItem("token", token);
+    localStorage.setItem("user", token);
   },
 };
 

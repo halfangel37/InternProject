@@ -41,16 +41,12 @@
             type="submit"
             class="signin white--text"
             :disabled="isButtonDisabled"
-            v-if="!isButtonDisabled"
-            >SIGN IN
-          </v-btn>
-          <v-btn
-            type="submit"
-            class="signin white--text"
-            :disabled="isButtonDisabled"
-            v-else-if="isButtonDisabled"
-            >SIGNING IN
-            <v-progress-circular indeterminate></v-progress-circular>
+          >
+            <span v-if="!isButtonDisabled">SIGN IN</span>
+            <span v-else
+              >SIGNING IN
+              <v-progress-circular indeterminate></v-progress-circular
+            ></span>
           </v-btn>
           <span class="mt-10 pb-5 d-flex j-center">
             <router-link to="/auth/signup"

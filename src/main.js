@@ -12,12 +12,6 @@ new Vue({
   router,
   store,
   created() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      this.$router.push({ path: "/companies" });
-    } else {
-      this.$router.push({ path: "/auth/signin" });
-    }
     axios.interceptors.response.use(
       (response) => response,
       (error) => {

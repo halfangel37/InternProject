@@ -23,6 +23,7 @@ const routes = [
   {
     path: "/companies",
     component: () => import("../views/Dashboard.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "contacts",
@@ -61,5 +62,18 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
+router.beforeEach((routeTo, routeFrom, next) => {
+  const userToken = localStorage.getItem("user");
+  if (routeTo.matched.some((record) => record.meta.requiresAuth)) {
+    if (!userToken) {
+      next({
+        path: "/signin",
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 export default router;
