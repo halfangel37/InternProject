@@ -55,32 +55,32 @@ export default {
         text: "Dashboard",
       },
       {
-        to: "",
+        to: "/companies/sales",
         icon: "mdi-currency-usd",
         text: "Sales",
       },
       {
-        to: "/dashboard/contacts",
+        to: "/companies/contacts",
         icon: "mdi-domain",
         text: "Contacts",
       },
       {
-        to: "/dashboard/products",
+        to: "/companies/products",
         icon: "mdi-cube-outline",
         text: "Products",
       },
       {
-        to: "",
+        to: "/companies/fees",
         icon: "mdi-calculator-variant-outline",
         text: "Fees",
       },
       {
-        to: "",
+        to: "/companies/employees",
         icon: "mdi-account-supervisor",
         text: "Employees",
       },
       {
-        to: "",
+        to: "/companies/setting",
         icon: "mdi-cog",
         text: "Company setting",
       },
