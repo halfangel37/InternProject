@@ -89,7 +89,6 @@ export default {
   methods: {
     onSubmit() {
       if (this.$refs.signInForm.validate()) {
-        this.isButtonDisabled = true;
         this.$emit("submit", { email: this.email, password: this.password });
       }
     },
