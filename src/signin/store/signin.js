@@ -1,10 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import axios from "axios";
-Vue.use(Vuex);
-export const HTTP = axios.create({
-  baseURL: `http://intern-2021.southeastasia.cloudapp.azure.com:4000/api/v1`,
-});
+import { signin } from "@/http/auth";
 
 export const namespaced = true;
 
@@ -17,7 +11,7 @@ export const mutations = {
 
 export const actions = {
   signinAccount({ commit }, credentials) {
-    return HTTP.post("/auth/authenticate", credentials).then(({ data }) => {
+    return signin(credentials).then(({ data }) => {
       commit("SET_USER_DATA", data);
     });
   },

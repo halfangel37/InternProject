@@ -12,7 +12,6 @@
 
 <script>
 import SignForm from "@/signin/components/SigninForm.vue";
-import NProgress from "nprogress";
 export default {
   components: { SignForm },
   name: "Signin",
@@ -22,17 +21,9 @@ export default {
       errorMessage: "",
     };
   },
-  computed: {
-    test() {
-      const test = localStorage.getState().token;
-      console.log(test);
-      return test;
-    },
-  },
   methods: {
     signin(infor) {
       this.isButtonDisabled = true;
-      NProgress.start();
       this.$store
         .dispatch("signin/signinAccount", {
           username: infor.email,
@@ -40,12 +31,9 @@ export default {
         })
         .then(() => {
           this.$router.push({ path: "/companies" });
-          NProgress.done();
         })
-        .catch((err) => {
-          this.error = err.response.data.error;
+        .catch(() => {
           this.errorMessage = "Account was wrong!";
-          NProgress.done();
           this.isButtonDisabled = false;
         });
     },

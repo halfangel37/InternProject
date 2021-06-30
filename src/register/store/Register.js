@@ -1,4 +1,4 @@
-import { HTTP } from "../../http-common";
+import { register } from "@/http/auth";
 
 export default {
   namespaced: true,
@@ -15,10 +15,10 @@ export default {
     },
   },
   actions: {
-    register({ commit }, credentials) {
+    registerAccount({ commit }, credentials) {
       commit("SET_ERROR_MESSAGE", "");
       commit("SET_SUCCESS_MESSAGE", "");
-      return HTTP.post("/auth/register", credentials)
+      return register(credentials)
         .then(() => {
           commit("SET_SUCCESS_MESSAGE", "success");
         })

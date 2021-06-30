@@ -23,7 +23,7 @@ export default {
   data: () => ({}),
   methods: {
     register(value) {
-      this.$store.dispatch("register/register", {
+      this.$store.dispatch("register/registerAccount", {
         firstName: value.firstName,
         lastName: value.lastName,
         username: value.email,

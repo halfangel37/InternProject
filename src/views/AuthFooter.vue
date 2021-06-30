@@ -13,7 +13,7 @@
       <div class="bg-footer pt-3 pb-3">
         <nav>
           <ul class="d-flex j-center c-footer">
-            <li class="mr-3">Accountia</li>
+            <li class="mr-3">EZtek</li>
             <li class="pl-3 pr-3 border-left border-right">
               All right reserved
             </li>
