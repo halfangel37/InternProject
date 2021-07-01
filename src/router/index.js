@@ -34,6 +34,10 @@ const routes = [
         component: () => import("../views/WelcomeDashboard.vue"),
       },
       {
+        path: "/profile",
+        component: () => import("../profile/views/Profile.vue"),
+      },
+      {
         path: "products",
         component: () => import("../views/Products.vue"),
       },

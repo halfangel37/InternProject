@@ -68,8 +68,13 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="list in listMenu" :key="list" @click="() => {}">
-            <v-list-item-title>{{ list }}</v-list-item-title>
+          <v-list-item
+            v-for="list in listMenu"
+            :key="list"
+            link
+            @click="$router.push({ path: list.route })"
+          >
+            <v-list-item-title>{{ list.name }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -97,7 +102,10 @@ export default {
         email: "vanthanhnguy2907@gmail.com",
       },
     ],
-    listMenu: ["Profile", "Event log"],
+    listMenu: [
+      { name: "Profile", route: "/profile" },
+      { name: "Event log", route: "/dashboard" },
+    ],
     icons: {
       mdiAccount,
       mdiLogoutVariant,
