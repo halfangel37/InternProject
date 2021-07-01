@@ -19,9 +19,14 @@ const space = (message) => (value) => {
   return !SPACE_REGEX.test(value) || message;
 };
 
+const maxLength = (message, maximum) => (value) => {
+  return (value && value.length < maximum + 1) || message;
+};
+
 export default {
   email,
   required,
   min,
   space,
+  maxLength,
 };

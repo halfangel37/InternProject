@@ -57,6 +57,10 @@ const routes = [
         path: "setting",
         component: () => import("../views/Setting.vue"),
       },
+      {
+        path: "create",
+        component: () => import("../companies/views/RegisterCompany.vue"),
+      },
     ],
   },
 ];
