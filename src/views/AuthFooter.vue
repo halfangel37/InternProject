@@ -1,7 +1,7 @@
 <template>
   <div class="bg-main">
     <footer>
-      <div class="d-flex j-center">
+      <div class="d-flex j-center contact">
         <span>
           <router-link to="/contact" class="contact"
             ><span class="fs-16">Contact Us</span></router-link
@@ -68,5 +68,31 @@ li {
 }
 .contact:hover {
   text-decoration: underline;
+}
+@media screen and (min-width: 320px) {
+  .bg-main,
+  .bg-footer {
+    background: white !important;
+  }
+  .v-divider {
+    display: none;
+  }
+  .contact {
+    display: none;
+  }
+}
+@media screen and (min-width: 414px) {
+  .bg-main {
+    background: #4f2566 !important;
+  }
+  .bg-footer {
+    background: #613b75 !important;
+  }
+  .v-divider {
+    display: block;
+  }
+  .contact {
+    display: block;
+  }
 }
 </style>

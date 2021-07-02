@@ -1,43 +1,42 @@
 <template>
-  <div class="bg-main changhe d-flex align-item-center j-center">
+  <div class="bg-main d-flex align-item-center j-center">
     <v-col class="mx-auto">
-      <SignForm
-        @submit="signin"
-        v-bind:isButtonDisabled="isButtonDisabled"
-        v-bind:errorMessage="errorMessage"
+      <ForgotPasswordForm
+        @submit="onSubmit"
+        :isButtonDisabled="isButtonDisabled"
+        :errorMessage="errorMessageGetter"
+        :isSuccess="isSuccessGetter"
       />
     </v-col>
   </div>
 </template>
 
 <script>
-import SignForm from "@/signin/components/SigninForm.vue";
+import ForgotPasswordForm from "@/forgotPassword/components/ForgotPasswordForm.vue";
+import { mapGetters } from "vuex";
 import "@/shared/style/style.css";
 export default {
-  components: { SignForm },
-  name: "Signin",
+  components: { ForgotPasswordForm },
   data() {
     return {
       isButtonDisabled: false,
-      errorMessage: "",
     };
   },
   methods: {
-    signin(infor) {
+    onSubmit(email) {
       this.isButtonDisabled = true;
       this.$store
-        .dispatch("signin/signinAccount", {
-          username: infor.email,
-          password: infor.password,
-        })
+        .dispatch("forgotPassword/forgotPassword", { email })
         .then(() => {
-          this.$router.push({ path: "/companies" });
-        })
-        .catch(() => {
-          this.errorMessage = "Account was wrong!";
           this.isButtonDisabled = false;
         });
     },
+  },
+  computed: {
+    ...mapGetters({
+      errorMessageGetter: "forgotPassword/errorMessageGetter",
+      isSuccessGetter: "forgotPassword/isSuccessGetter",
+    }),
   },
 };
 </script>

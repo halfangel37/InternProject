@@ -18,6 +18,17 @@ const routes = [
         name: "Signin",
         component: () => import("../signin/views/Signin.vue"),
       },
+      {
+        path: "forgot-password",
+        name: "ForgotPassword",
+        component: () => import("../forgotPassword/views/ForgotPassword.vue"),
+      },
+      {
+        path: "reset-password/:key",
+        props: true,
+        name: "ResetPassword",
+        component: () => import("../resetPassword/views/ResetPassword.vue"),
+      },
     ],
   },
   {

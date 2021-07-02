@@ -4,7 +4,7 @@
       {{ errorMessage }}
     </v-alert>
     <v-alert v-if="successMessage" type="success">
-      Congratulations ! You are cuccessfully signed up ! You can
+      Congratulations ! You are successfully signed up ! You can
       <router-link to="/auth/signin">Sign in</router-link> now !
     </v-alert>
     <v-text-field
