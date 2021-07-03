@@ -74,6 +74,16 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/",
+    component: () => import("../views/Dashboard.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/**",
+    component: () => import("../views/Dashboard.vue"),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = new VueRouter({
