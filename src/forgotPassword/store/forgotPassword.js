@@ -22,7 +22,7 @@ export const actions = {
         commit("SET_IS_SUCCESS", true);
       })
       .catch((error) => {
-        commit("SET_ERROR_MESSAGE", error);
+        commit("SET_ERROR_MESSAGE", error.response.data.errors[0].message);
       });
   },
 };
