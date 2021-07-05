@@ -8,6 +8,7 @@
             @register-user="register"
             :errorMessage="errorMessageGetter"
             :successMessage="successMessageGetter"
+            :isButtonDisabled="isButtonDisabled"
           />
         </v-col>
       </v-row>
@@ -20,15 +21,19 @@ import RegisterForm from "../components/RegisterForm.vue";
 import { mapGetters } from "vuex";
 export default {
   components: { RegisterForm },
-  data: () => ({}),
+  data: () => ({ isButtonDisabled: false }),
   methods: {
     register(value) {
-      this.$store.dispatch("register/registerAccount", {
-        firstName: value.firstName,
-        lastName: value.lastName,
-        username: value.email,
-        password: value.password,
-      });
+      this.$store
+        .dispatch("register/registerAccount", {
+          firstName: value.firstName,
+          lastName: value.lastName,
+          username: value.email,
+          password: value.password,
+        })
+        .then(() => {
+          this.isButtonDisabled = false;
+        });
     },
   },
   computed: {

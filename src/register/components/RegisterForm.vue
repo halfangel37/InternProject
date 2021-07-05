@@ -45,13 +45,12 @@
       class="register-btn"
       block
       color="#FFBF3F"
-      v-on:click="validateForm"
       type="submit"
-      :disabled="successMessage != ''"
+      :disabled="isButtonDisabled"
     >
-      <span v-if="!successMessage">SIGN UP</span>
-      <span v-if="successMessage"
-        >Signing Up
+      <span v-if="!isButtonDisabled">SIGN UP</span>
+      <span v-else
+        >SIGNING UP
         <v-progress-circular
           :size="20"
           width="3"
@@ -70,7 +69,11 @@
 <script>
 import validators from "@/shared/form-validators";
 export default {
-  props: ["errorMessage", "successMessage"],
+  props: {
+    isButtonDisabled: Boolean,
+    errorMessage: String,
+    successMessage: String,
+  },
   data: () => ({
     showPassword: false,
     userInfor: {
@@ -92,11 +95,10 @@ export default {
     ],
   }),
   methods: {
-    validateForm() {
-      this.$refs.signUpForm.validate();
-    },
     onSubmit() {
-      this.$emit("register-user", this.userInfor);
+      if (this.$refs.signUpForm.validate()) {
+        this.$emit("register-user", this.userInfor);
+      }
     },
   },
 };
