@@ -1,11 +1,11 @@
-import { forgotPassword } from "@/http/auth";
+import { resetPassword } from "@/http/auth";
 
-export const namespaced = true;
-export const state = {
+const state = {
   errorMessage: "",
   isSuccess: false,
 };
-export const mutations = {
+
+const mutations = {
   SET_ERROR_MESSAGE(state, error) {
     state.errorMessage = error;
   },
@@ -13,20 +13,30 @@ export const mutations = {
     state.isSuccess = isSuccess;
   },
 };
-export const actions = {
-  forgotPassword({ commit }, email) {
+
+const actions = {
+  resetPassword({ commit }, credentials) {
     commit("SET_IS_SUCCESS", false);
     commit("SET_ERROR_MESSAGE", "");
-    return forgotPassword(email)
+    return resetPassword(credentials)
       .then(() => {
         commit("SET_IS_SUCCESS", true);
       })
       .catch((error) => {
-        commit("SET_ERROR_MESSAGE", error.response.data.errors[0].message);
+        commit("SET_ERROR_MESSAGE", error);
       });
   },
 };
-export const getters = {
+
+const getters = {
   errorMessageGetter: (state) => state.errorMessage,
   isSuccessGetter: (state) => state.isSuccess,
 };
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions,
+  getters,
+}

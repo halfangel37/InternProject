@@ -2,11 +2,7 @@ import Vue from "vue";
 import { create } from "@/http/employees";
 import { STATUS } from "@/http/status-code";
 
-export const namespaced = true;
-
-export const mutations = {};
-
-export const actions = {
+const actions = {
   createEmployee(commit, { employee, companyId }) {
     return create(employee, companyId)
       .then(() => {
@@ -35,3 +31,8 @@ export const actions = {
       });
   },
 };
+
+export default {
+  namespaced: true,
+  actions,
+}
