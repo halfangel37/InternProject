@@ -22,6 +22,7 @@ const space = (message) => (value) => {
 const maxLength = (message, maximum) => (value) => {
   return (value && value.length < maximum + 1) || message;
 };
+
 const mustMatch = (message, getPassword) => (value) => {
   const password = getPassword();
   return value === password || message;

@@ -6,6 +6,7 @@ import "vue-toast-notification/dist/theme-sugar.css";
 Vue.use(Vuex);
 Vue.use(VueToast);
 export const namespaced = true;
+
 export const mutations = {};
 
 export const actions = {
@@ -21,9 +22,9 @@ export const actions = {
         });
       })
       .catch((error) => {
-        commit("");
+        commit("SET_ERROR_MESSAGE", "");
         Vue.$toast.open({
-          message: error,
+          message: error.response.data.errors[0].title,
           type: "error",
           duration: 3000,
           dismissible: true,

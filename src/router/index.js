@@ -35,9 +35,10 @@ const routes = [
     path: "/companies",
     component: () => import("../views/Dashboard.vue"),
     meta: { requiresAuth: true },
+    props: true,
     children: [
       {
-        path: "contacts",
+        path: ":companyId/contacts",
         component: () => import("../views/Contacts.vue"),
       },
       {
@@ -49,20 +50,20 @@ const routes = [
         component: () => import("../profile/views/Profile.vue"),
       },
       {
-        path: "products",
+        path: ":companyId/products",
         component: () => import("../views/Products.vue"),
       },
       {
-        path: "sales",
+        path: ":companyId/sales",
         component: () => import("../views/Sales.vue"),
       },
       {
-        path: "fees",
+        path: ":companyId/fees",
         component: () => import("../views/Fees.vue"),
       },
       {
-        path: "employees",
-        component: () => import("../views/Employees.vue"),
+        path: ":companyId/employees",
+        component: () => import("../employees/views/EmployeesDashboard.vue"),
       },
       {
         path: "setting",
@@ -71,6 +72,10 @@ const routes = [
       {
         path: "create",
         component: () => import("../companies/views/RegisterCompany.vue"),
+      },
+      {
+        path: ":companyId/employees/create",
+        component: () => import("../employees/views/CreateEmployee.vue"),
       },
     ],
   },

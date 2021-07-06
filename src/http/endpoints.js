@@ -1,5 +1,8 @@
 const AUTH = "/auth";
 const ACCOUNT = "/accounts";
+export const COMPANY = "/companies";
+export const EMPLOYEE = "/employees";
+
 export const AUTHENTICATE_ENDPOINT = AUTH + "/authenticate";
 export const REGISTER_ENDPOINT = AUTH + "/register";
 export const FORGOT_PASSWORD_ENDPOINT = AUTH + "/forgot-password";
