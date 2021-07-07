@@ -9,9 +9,6 @@ const actions = {
         Vue.$toast.open({
           message: "Create employee successfully!",
           type: "success",
-          duration: 3000,
-          dismissible: true,
-          position: "top-right",
         });
       })
       .catch((error) => {
@@ -21,9 +18,6 @@ const actions = {
               Vue.$toast.open({
                 message: error.response.data.errors[0].message,
                 type: "error",
-                duration: 3000,
-                dismissible: true,
-                position: "top-right",
               });
               break;
           }

@@ -24,9 +24,10 @@
               <v-alert v-if="errorMessage === null" type="success">
                 Congratulations ! You password are changed successfully !
               </v-alert>
+
               <ChangePasswordForm
                 @change-password="changePassword"
-                :errorMessage="errorMessage"
+                :isButtonDisabled="isButtonDisabled"
               />
             </v-col>
           </v-row>
@@ -56,9 +57,9 @@ import { mapGetters } from "vuex";
 export default {
   components: { ChangePasswordForm, UserProfileForm },
   data: () => ({
-    isButtonDisabled: false,
     tab: null,
     items: ["Profile", "Account", "Password", "Devices"],
+    isButtonDisabled: false,
   }),
 
   methods: {

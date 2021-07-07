@@ -1,8 +1,10 @@
 import Vue from "vue";
 import { create } from "@/http/companies";
+export const namespaced = true;
 
 import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
+
 
 Vue.use(VueToast);
 
@@ -13,9 +15,6 @@ const actions = {
         Vue.$toast.open({
           message: "Create company successfully!",
           type: "success",
-          duration: 3000,
-          dismissible: true,
-          position: "top-right",
         });
       })
       .catch((error) => {
@@ -23,9 +22,6 @@ const actions = {
         Vue.$toast.open({
           message: error.response.data.errors[0].title,
           type: "error",
-          duration: 3000,
-          dismissible: true,
-          position: "top-right",
         });
       });
   },

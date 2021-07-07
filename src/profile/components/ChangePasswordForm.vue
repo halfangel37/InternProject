@@ -1,14 +1,9 @@
 <template>
-  <v-form
-    class="form"
-    @submit.prevent="onSubmit"
-    ref="changePasswordForm"
-    v-model="formValidity"
-  >
+  <v-form class="form" @submit.prevent="onSubmit" ref="changePasswordForm">
     <h3>Contact Info</h3>
 
     <v-text-field
-      v-model="password.currentPassword"
+      v-model="currentPassword"
       label="Current Password"
       :type="showCurrentPassword ? 'text' : 'password'"
       outlined
@@ -18,12 +13,12 @@
       @click:append="showCurrentPassword = !showCurrentPassword"
     />
     <v-text-field
-      v-model="password.newPassword"
+      v-model="newPassword"
       label="New Password"
       :type="showNewPassword ? 'text' : 'password'"
       outlined
       dense
-      :rules="passwordRules"
+      :rules="newPasswordRules"
       :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showNewPassword = !showNewPassword"
     />
@@ -33,20 +28,17 @@
       outlined
       dense
       v-model="confirmPassword"
-      :rules="[
-        password.newPassword === confirmPassword || 'Password must match',
-      ]"
+      :rules="passwordAgainRules"
       :append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showRepeatPassword = !showRepeatPassword"
     />
 
     <v-btn
-      :disabled="!formValidity || errorMessage === null"
+      :disabled="isButtonDisabled"
       class="submit-btn"
       block
       color="#4f2566"
       type="submit"
-      v-on:click="validateForm"
       ><span
         >CHANGE PASSWORD
         <v-progress-circular
@@ -54,7 +46,7 @@
           width="3"
           color="white"
           indeterminate
-          v-if="errorMessage === null"
+          v-if="isButtonDisabled"
         ></v-progress-circular></span
     ></v-btn>
   </v-form>
@@ -63,28 +55,47 @@
 <script>
 import validators from "@/shared/form-validators";
 export default {
-  props: ["errorMessage"],
-  data: () => ({
-    password: {
+  props: {
+    isButtonDisabled: Boolean,
+  },
+  data() {
+    return {
       currentPassword: "",
       newPassword: "",
-    },
-    formValidity: false,
-    confirmPassword: null,
-    showCurrentPassword: false,
-    showNewPassword: false,
-    showRepeatPassword: false,
-    passwordRules: [
-      validators.required("Password is required"),
-      validators.min("Min 6 characters", 6),
-    ],
-  }),
+      confirmPassword: null,
+      showCurrentPassword: false,
+      showNewPassword: false,
+      showRepeatPassword: false,
+      passwordRules: [
+        validators.required("Password is required"),
+        validators.min("Min 6 characters", 6),
+      ],
+      newPasswordRules: [
+        validators.required("Password is required"),
+        validators.min("Min 6 characters", 6),
+        validators.mustNotMatch(
+          "New password and existing password should not be the same!",
+          () => this.currentPassword
+        ),
+      ],
+      passwordAgainRules: [
+        validators.required("Password is required"),
+        validators.min("Min 6 characters", 6),
+        validators.mustMatch(
+          "Verifiability password and newpassword should be the same!",
+          () => this.newPassword
+        ),
+      ],
+    };
+  },
   methods: {
-    validateForm() {
-      this.$refs.changePasswordForm.validate();
-    },
     onSubmit() {
-      this.$emit("change-password", this.password);
+      if (this.$refs.changePasswordForm.validate()) {
+        this.$emit("change-password", {
+          currentPassword: this.currentPassword,
+          newPassword: this.newPassword,
+        });
+      }
     },
   },
 };

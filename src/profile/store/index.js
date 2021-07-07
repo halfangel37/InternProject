@@ -1,6 +1,5 @@
 import { changeUserPassword } from "@/http/auth";
 import { httpClient } from "../../http/httpClient";
-import router from "../../router";
 import Vue from "vue";
 export default {
   namespaced: true,
@@ -21,18 +20,19 @@ export default {
   },
   actions: {
     changePassword({ commit }, credentials) {
-      commit("SET_PASSWORD_MESSAGE", "");
       return changeUserPassword(credentials)
         .then(() => {
-          commit("SET_PASSWORD_MESSAGE", null);
-          setTimeout(() => router.push({ path: "/dashboard" }), 1700);
+          Vue.$toast.open({
+            message: "Change password successfully!",
+            type: "success",
+          });
+          commit();
         })
         .catch((error) => {
-          const message = error.response.data.errors[0]
-            ? error.response.data.errors[0].message
-            : error.response.data.errors.NewPassword[0];
-
-          commit("SET_PASSWORD_MESSAGE", message);
+          Vue.$toast.open({
+            message: error.response.data.errors[0].message,
+            type: "error",
+          });
         });
     },
     getUserProfile({ commit }) {
@@ -72,6 +72,7 @@ export default {
         });
     },
   },
+
   getters: {
     changePasswordMessageGetter: (state) => state.changePasswordMessage,
     userNameGetter: (state) => state.user,
