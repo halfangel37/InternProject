@@ -11,6 +11,7 @@
       :rules="passwordRules"
       :append-icon="showCurrentPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showCurrentPassword = !showCurrentPassword"
+      validate-on-blur
     />
     <v-text-field
       v-model="newPassword"
@@ -21,6 +22,7 @@
       :rules="newPasswordRules"
       :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showNewPassword = !showNewPassword"
+      validate-on-blur
     />
     <v-text-field
       label="Repeat New Password"
@@ -31,6 +33,7 @@
       :rules="passwordAgainRules"
       :append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showRepeatPassword = !showRepeatPassword"
+      validate-on-blur
     />
 
     <v-btn

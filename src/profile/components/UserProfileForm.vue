@@ -18,19 +18,19 @@
     </v-col>
     <v-text-field
       label="First Name"
-      type="text"
       outlined
       dense
       :rules="nameRules"
       v-model="user.firstName"
+      validate-on-blur
     />
     <v-text-field
       label="Last Name"
-      type="text"
       outlined
       dense
       :rules="nameRules"
       v-model="user.lastName"
+      validate-on-blur
     />
 
     <v-btn

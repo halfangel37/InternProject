@@ -9,27 +9,27 @@
     </v-alert>
     <v-text-field
       label="Email/User Name"
-      type="email"
       v-model="userInfor.email"
       outlined
       dense
       :rules="emailRules"
+      validate-on-blur
     />
     <v-text-field
       v-model="userInfor.firstName"
       label="First Name"
-      type="name"
       outlined
       dense
       :rules="nameRules"
+      validate-on-blur
     />
     <v-text-field
       v-model="userInfor.lastName"
       label="Last Name"
-      type="name"
       outlined
       dense
       :rules="nameRules"
+      validate-on-blur
     />
     <v-text-field
       :rules="passwordRules"
@@ -40,6 +40,7 @@
       :type="showPassword ? 'text' : 'password'"
       :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append="showPassword = !showPassword"
+      validate-on-blur
     />
     <v-btn
       class="register-btn"

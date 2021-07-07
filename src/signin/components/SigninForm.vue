@@ -21,7 +21,7 @@
             :rules="emailRules"
             label="Username"
             dense
-            type="email"
+            validate-on-blur
           />
           <v-text-field
             dense
@@ -34,6 +34,7 @@
             label="Password"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
+            validate-on-blur
           />
           <div class="mt-5">
             <router-link to="/auth/forgot-password"
