@@ -16,5 +16,8 @@ export default {
     NavBar,
     MainContent,
   },
+  created() {
+    this.$store.dispatch("profile/getUserProfile");
+  },
 };
 </script>

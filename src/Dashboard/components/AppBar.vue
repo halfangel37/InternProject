@@ -54,12 +54,8 @@
             color="#f5f5f5"
             id="hide-option"
           >
-            <h5
-              v-for="user in listUser"
-              :key="user"
-              style="color: #1f2933; font-size: 15px; font-weight: 400"
-            >
-              {{ user.name }}
+            <h5 style="color: #1f2933; font-size: 15px; font-weight: 400">
+              {{ user.firstName }} {{ user.lastName }}
             </h5>
             <div class="px-1"></div>
             <v-icon color="#DDE2E9">{{ icons.mdiAccount }}</v-icon>
@@ -92,16 +88,9 @@ import {
   mdiMenu,
   mdiDotsHorizontal,
 } from "@mdi/js";
-
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
-    listUser: [
-      {
-        name: "client",
-        age: "23",
-        email: "vanthanhnguy2907@gmail.com",
-      },
-    ],
     listMenu: [
       { name: "Profile", route: "/profile" },
       { name: "Event log", route: "/dashboard" },
@@ -137,6 +126,11 @@ export default {
         .dispatch("signout/signoutAccount")
         .then(this.$route.push({ path: "/auth/signin" }));
     },
+  },
+  computed: {
+    ...mapGetters({
+      user: "profile/userNameGetter",
+    }),
   },
 };
 </script>

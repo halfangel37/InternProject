@@ -17,7 +17,7 @@
       <v-tab-item v-for="item in items" :key="item">
         <v-container class="form-container" :class="{ active: tab === 2 }">
           <v-row>
-            <v-col cols="12" sm="12" md="8" lg="6">
+            <v-col cols="12" xs="12" sm="12" md="8" lg="8">
               <v-alert v-if="errorMessage" type="error">
                 {{ errorMessage }}
               </v-alert>
@@ -31,6 +31,18 @@
             </v-col>
           </v-row>
         </v-container>
+        <v-container class="form-container" :class="{ active: tab === 0 }">
+          <v-row>
+            <v-col cols="12" sm="6" md="4" lg="4">
+              <UserProfileForm
+                :user="user"
+                @update-profile="updateProfile"
+                @update-avatar="updateAvatar"
+                :isButtonDisabled="isButtonDisabled"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
     </v-tabs-items>
   </v-main>
@@ -38,11 +50,13 @@
 
 <script>
 import ChangePasswordForm from "../components/ChangePasswordForm.vue";
+import UserProfileForm from "../components/UserProfileForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
-  components: { ChangePasswordForm },
+  components: { ChangePasswordForm, UserProfileForm },
   data: () => ({
+    isButtonDisabled: false,
     tab: null,
     items: ["Profile", "Account", "Password", "Devices"],
   }),
@@ -54,10 +68,25 @@ export default {
         newPassword,
       });
     },
+    updateProfile(user) {
+      this.isButtonDisabled = true;
+      this.$store
+        .dispatch("profile/updateUserProfile", {
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .then(() => {
+          this.isButtonDisabled = false;
+        });
+    },
+    updateAvatar(formData) {
+      this.$store.dispatch("profile/updateUserAvatar", formData);
+    },
   },
   computed: {
     ...mapGetters({
       errorMessage: "profile/changePasswordMessageGetter",
+      user: "profile/userNameGetter",
     }),
   },
 };
