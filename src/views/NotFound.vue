@@ -8,7 +8,7 @@
         The page you are looking for might have been removed had its name
         changed or is temporarily unavailable.
       </p>
-      <a href="/companies">Home page</a>
+      <router-link to="/companies"><span>Home page</span></router-link>
     </div>
   </div>
 </template>
