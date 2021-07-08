@@ -18,13 +18,6 @@
         <v-container class="form-container" :class="{ active: tab === 2 }">
           <v-row>
             <v-col cols="12" xs="12" sm="12" md="8" lg="8">
-              <v-alert v-if="errorMessage" type="error">
-                {{ errorMessage }}
-              </v-alert>
-              <v-alert v-if="errorMessage === null" type="success">
-                Congratulations ! You password are changed successfully !
-              </v-alert>
-
               <ChangePasswordForm
                 @change-password="changePassword"
                 :isButtonDisabled="isButtonDisabled"
@@ -63,9 +56,9 @@ export default {
   }),
 
   methods: {
-    changePassword({ currentPassword, newPassword }) {
+    changePassword({ currentPassword: oldPassword, newPassword }) {
       this.$store.dispatch("profile/changePassword", {
-        oldPassword: currentPassword,
+        oldPassword,
         newPassword,
       });
     },
@@ -86,7 +79,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      errorMessage: "profile/changePasswordMessageGetter",
       user: "profile/userNameGetter",
     }),
   },

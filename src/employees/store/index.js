@@ -6,19 +6,13 @@ const actions = {
   createEmployee(commit, { employee, companyId }) {
     return create(employee, companyId)
       .then(() => {
-        Vue.$toast.open({
-          message: "Create employee successfully!",
-          type: "success",
-        });
+        Vue.$toast.success("Create employee successfully!");
       })
       .catch((error) => {
         if (error.response) {
           switch (error.response.status) {
             case STATUS.CONFLICT:
-              Vue.$toast.open({
-                message: error.response.data.errors[0].message,
-                type: "error",
-              });
+              Vue.$toast.error(error.response.data.errors[0].message);
               break;
           }
         }

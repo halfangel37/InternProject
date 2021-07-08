@@ -22,17 +22,11 @@ export default {
     changePassword({ commit }, credentials) {
       return changeUserPassword(credentials)
         .then(() => {
-          Vue.$toast.open({
-            message: "Change password successfully!",
-            type: "success",
-          });
+          Vue.$toast.success("Change password successfully!");
           commit();
         })
         .catch((error) => {
-          Vue.$toast.open({
-            message: error.response.data.errors[0].message,
-            type: "error",
-          });
+          Vue.$toast.error(error.response.data.errors[0].message);
         });
     },
     getUserProfile({ commit }) {
@@ -45,15 +39,10 @@ export default {
         .put("/accounts", credentials)
         .then((response) => {
           commit("SET_USER_PROFILE", response.data);
-
-          Vue.$toast.success("Your info have been saved.", {
-            position: "top-right",
-          });
+          Vue.$toast.success("Your info have been saved.");
         })
         .catch((error) => {
-          Vue.$toast.error(error.response.data.errors, {
-            position: "top-right",
-          });
+          Vue.$toast.error(error.response.data.errors);
         });
     },
     updateUserAvatar({ commit }, formData) {
@@ -61,14 +50,10 @@ export default {
         .post("/accounts/avatar", formData)
         .then((response) => {
           commit("UPDATE_USER_AVATAR", response.data);
-          Vue.$toast.success("Your avatar have been saved.", {
-            position: "top-right",
-          });
+          Vue.$toast.success("Your avatar have been saved.");
         })
         .catch((error) => {
-          Vue.$toast.error(error.response.data.errors, {
-            position: "top-right",
-          });
+          Vue.$toast.error(error.response.data.errors);
         });
     },
   },
