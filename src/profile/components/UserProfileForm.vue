@@ -1,5 +1,5 @@
 <template>
-  <v-form @submit.prevent="onSubmit" class="form">
+  <v-form @submit.prevent="onSubmit" ref="userProfileForm" class="form">
     <v-col cols="12" sm="6" md="8" lg="8">
       <v-img
         class="avatar"
@@ -58,8 +58,10 @@ import validators from "@/shared/form-validators";
 import { imageBaseUrl } from "@/config.js";
 
 export default {
-  props: ["user", "isButtonDisabled"],
-
+  props: {
+    user: Object,
+    isButtonDisabled: Boolean,
+  },
   data: () => ({
     imageUrl: imageBaseUrl,
     nameRules: [validators.required("Name is required")],
@@ -72,7 +74,9 @@ export default {
       this.$emit("update-avatar", formData);
     },
     onSubmit() {
-      this.$emit("update-profile", this.user);
+      if (this.$refs.userProfileForm.validate()) {
+        this.$emit("update-profile", this.user);
+      }
     },
   },
 };

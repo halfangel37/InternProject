@@ -56,11 +56,16 @@ export default {
   }),
 
   methods: {
-    changePassword({ currentPassword: oldPassword, newPassword }) {
-      this.$store.dispatch("profile/changePassword", {
-        oldPassword,
-        newPassword,
-      });
+    changePassword({ oldPassword, newPassword }) {
+      this.isButtonDisabled = true;
+      this.$store
+        .dispatch("profile/changePassword", {
+          oldPassword,
+          newPassword,
+        })
+        .then(() => {
+          this.isButtonDisabled = false;
+        });
     },
     updateProfile(user) {
       this.isButtonDisabled = true;

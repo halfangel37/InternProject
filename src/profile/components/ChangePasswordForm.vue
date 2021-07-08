@@ -3,7 +3,7 @@
     <h3>Contact Info</h3>
 
     <v-text-field
-      v-model="currentPassword"
+      v-model="oldPassword"
       label="Current Password"
       :type="showCurrentPassword ? 'text' : 'password'"
       outlined
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      currentPassword: "",
+      oldPassword: "",
       newPassword: "",
       confirmPassword: null,
       showCurrentPassword: false,
@@ -95,7 +95,7 @@ export default {
     onSubmit() {
       if (this.$refs.changePasswordForm.validate()) {
         this.$emit("change-password", {
-          currentPassword: this.currentPassword,
+          oldPassword: this.oldPassword,
           newPassword: this.newPassword,
         });
       }
@@ -116,5 +116,8 @@ h3 {
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
   border-radius: 4px;
   padding: 1.5rem;
+}
+.submit-btn {
+  width: 11rem;
 }
 </style>

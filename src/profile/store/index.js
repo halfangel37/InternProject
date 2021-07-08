@@ -4,13 +4,9 @@ import Vue from "vue";
 export default {
   namespaced: true,
   state: {
-    changePasswordMessage: "",
     user: { id: "", firstName: "", lastName: "", imageName: "" },
   },
   mutations: {
-    SET_PASSWORD_MESSAGE(state, errorMessage) {
-      state.changePasswordMessage = errorMessage;
-    },
     SET_USER_PROFILE(state, user) {
       state.user = user;
     },
