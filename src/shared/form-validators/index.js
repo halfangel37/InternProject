@@ -3,6 +3,7 @@ const EMAIL_REGEX =
 
 const SPACE_REGEX = /[ ]/;
 
+const IMAGE_REGEX = /(https?:\/\/.*\.(?:png|jpg))/i;
 const email = (message) => (value) => {
   return EMAIL_REGEX.test(value) || message;
 };
@@ -14,7 +15,6 @@ const required = (message) => (value) => {
 const min = (message, minimum) => (value) => {
   return (value && value.length > minimum - 1) || message;
 };
-
 const space = (message) => (value) => {
   return !SPACE_REGEX.test(value) || message;
 };
@@ -32,6 +32,19 @@ const mustNotMatch = (errorMessage, notMatchTo) => (value) => {
     typeof notMatchTo === "function" ? notMatchTo() : notMatchTo;
   return value !== notMatchValue || errorMessage;
 };
+
+const mustBeImage = (message) => (value) => {
+  return IMAGE_REGEX.test(value) || message;
+};
+
+const mustNotExistTwice = (errorMessage, notExistTwice) => (value) => {
+  const notExistTwiceValue =
+    typeof notExistTwice === "function" ? notExistTwice() : notExistTwice;
+  const filteredValues = notExistTwiceValue.filter((item) => item === value);
+
+  return filteredValues.length < 2 || errorMessage;
+};
+
 export default {
   email,
   required,
@@ -40,4 +53,6 @@ export default {
   maxLength,
   mustMatch,
   mustNotMatch,
+  mustBeImage,
+  mustNotExistTwice,
 };

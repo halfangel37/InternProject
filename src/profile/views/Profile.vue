@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: "profile/userNameGetter",
+      user: "profile/userGetter",
     }),
   },
 };

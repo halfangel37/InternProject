@@ -3,6 +3,7 @@ import Vuex, { createLogger} from "vuex";
 
 import register from "@/register/store";
 import profile from "@/profile/store";
+import product from "@/product/store";
 import signin from "@/signin/store";
 import signout from "@/signout/store";
 import companies from "@/companies/store";
@@ -27,5 +28,6 @@ export default new Vuex.Store({
     employees,
     forgotPassword,
     resetPassword,
+    product
   },
 });

@@ -78,7 +78,7 @@ export default {
         validators.min("Min 6 characters", 6),
         validators.mustNotMatch(
           "New password and existing password should not be the same!",
-          () => this.currentPassword
+          () => this.oldPassword
         ),
       ],
       passwordAgainRules: [

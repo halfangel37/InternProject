@@ -15,11 +15,10 @@ export default {
     },
   },
   actions: {
-    changePassword({ commit }, credentials) {
+    changePassword(_, credentials) {
       return changeUserPassword(credentials)
         .then(() => {
           Vue.$toast.success("Change password successfully!");
-          commit();
         })
         .catch((error) => {
           Vue.$toast.error(error.response.data.errors[0].message);
@@ -56,6 +55,6 @@ export default {
 
   getters: {
     changePasswordMessageGetter: (state) => state.changePasswordMessage,
-    userNameGetter: (state) => state.user,
+    userGetter: (state) => state.user,
   },
 };
