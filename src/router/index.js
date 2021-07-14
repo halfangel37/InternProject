@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store";
 Vue.use(VueRouter);
 
 const routes = [
@@ -66,8 +67,35 @@ const routes = [
         component: () => import("../views/Fees.vue"),
       },
       {
-        path: ":companyId/employees",
+        path: ":companyId/employees/",
         component: () => import("../employees/views/EmployeesDashboard.vue"),
+        props: true,
+        children: [
+          {
+            path: "",
+            props: true,
+            component: () => import("../employees/views/EmployeesDashboard.vue"),
+            beforeEnter(routeTo, routeFrom, next) {
+              store
+                .dispatch("employees/getEmployees", {
+                  PageNumber: 1,
+                  PageSize: 10,
+                  companyId: routeTo.params.companyId,
+                })
+                .then(() => {
+                  next();
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            },
+          },
+          {
+            path: "/create",
+            component: () => import("../employees/views/CreateEmployee.vue"),
+          },
+        ],
+        
       },
       {
         path: "setting",
@@ -78,7 +106,7 @@ const routes = [
         component: () => import("../companies/views/RegisterCompany.vue"),
       },
       {
-        path: ":companyId/employees/create",
+        path: ":companyId/employees/:employeeId",
         component: () => import("../employees/views/CreateEmployee.vue"),
       },
     ],
