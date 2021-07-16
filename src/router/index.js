@@ -3,122 +3,188 @@ import VueRouter from "vue-router";
 import store from "../store";
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/auth",
     name: "AuthPage",
-    component: () => import("../views/AuthPage.vue"),
-    children: [
-      {
+    component: () =>
+      import ("../views/AuthPage.vue"),
+    children: [{
         path: "signup",
         name: "Signup",
-        component: () => import("../register/views/RegisterPage.vue"),
+        component: () =>
+          import ("../register/views/RegisterPage.vue"),
       },
       {
         path: "signin",
         name: "Signin",
-        component: () => import("../signin/views/Signin.vue"),
+        component: () =>
+          import ("../signin/views/Signin.vue"),
       },
       {
         path: "forgot-password",
         name: "ForgotPassword",
-        component: () => import("../forgotPassword/views/ForgotPassword.vue"),
+        component: () =>
+          import ("../forgotPassword/views/ForgotPassword.vue"),
       },
       {
         path: "reset-password/:key",
         props: true,
         name: "ResetPassword",
-        component: () => import("../resetPassword/views/ResetPassword.vue"),
+        component: () =>
+          import ("../resetPassword/views/ResetPassword.vue"),
       },
     ],
   },
   {
     path: "/companies",
-    component: () => import("../views/Dashboard.vue"),
+    component: () =>
+      import ("../views/Dashboard.vue"),
     meta: { requiresAuth: true },
     props: true,
-    children: [
-      {
-        path: ":companyId/contacts",
-        component: () => import("../views/Contacts.vue"),
+    children: [{
+        path: "",
+        component: () =>
+          import ("../companies/views/CompaniesDashboard.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+          store
+            .dispatch("companies/getCompanies", {
+              PageNumber: 1,
+              PageSize: 10,
+            })
+            .then(() => {
+              next();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        },
       },
-      {
-        path: "/dashboard",
-        component: () => import("../views/WelcomeDashboard.vue"),
-      },
+      //============================================
       {
         path: "/profile",
-        component: () => import("../profile/views/Profile.vue"),
+        component: () =>
+          import ("../profile/views/Profile.vue"),
+      },
+      {
+        path: ":companyId/contacts",
+        component: () =>
+          import ("../views/Contacts.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+            .then(() => next());
+        }
       },
       {
         path: ":companyId/products",
-        component: () => import("../views/Products.vue"),
+        component: () =>
+          import ("../views/Products.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+            .then(() => next());
+        }
       },
       {
         path: ":companyId/products/create",
-        component: () => import("../product/views/CreateProduct.vue"),
+        component: () =>
+          import ("../product/views/CreateProduct.vue"),
       },
       {
         path: ":companyId/sales",
-        component: () => import("../views/Sales.vue"),
+        component: () =>
+          import ("../views/Sales.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+            .then(() => next());
+        }
       },
       {
         path: ":companyId/fees",
-        component: () => import("../views/Fees.vue"),
+        component: () =>
+          import ("../views/Fees.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+            .then(() => next());
+        }
       },
       {
-        path: ":companyId/employees/",
-        component: () => import("../employees/views/EmployeesDashboard.vue"),
+        path: ":companyId/employees",
+        component: () =>
+          import ("../employees/views/EmployeesDashboard.vue"),
         props: true,
-        children: [
-          {
-            path: "",
-            props: true,
-            component: () => import("../employees/views/EmployeesDashboard.vue"),
-            beforeEnter(routeTo, routeFrom, next) {
-              store
-                .dispatch("employees/getEmployees", {
-                  PageNumber: 1,
-                  PageSize: 10,
-                  companyId: routeTo.params.companyId,
-                })
-                .then(() => {
-                  next();
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            },
-          },
-          {
-            path: "/create",
-            component: () => import("../employees/views/CreateEmployee.vue"),
-          },
-        ],
-        
+        children: [{
+          path: "",
+          props: true,
+          component: () =>
+            import ("../employees/views/EmployeesDashboard.vue"),
+          beforeEnter(routeTo, routeFrom, next) {
+            store
+              .dispatch("companies/getCompanyById",
+                routeTo.params.companyId,
+              ).then(() => next());
+            store
+              .dispatch("employees/getEmployees", {
+                PageNumber: 1,
+                PageSize: 10,
+                companyId: routeTo.params.companyId,
+              }).then(() => next());
+          }
+        }]
       },
       {
-        path: "setting",
-        component: () => import("../views/Setting.vue"),
+        path: ":companyId/setting",
+        component: () =>
+          import ("../views/Setting.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanyById",
+              routeTo.params.companyId,
+            )
+            .then(() => next());
+        }
       },
       {
         path: "create",
-        component: () => import("../companies/views/RegisterCompany.vue"),
+        component: () =>
+          import ("../companies/views/RegisterCompany.vue"),
       },
       {
-        path: ":companyId/employees/:employeeId",
-        component: () => import("../employees/views/CreateEmployee.vue"),
+        path: ":companyId/employees/create",
+        component: () =>
+          import ("../employees/views/CreateEmployee.vue"),
       },
-    ],
+      {
+        path: "/:companies/:companyId/dashboard",
+        component: () =>
+          import ("../views/WelcomeDashboard.vue"),
+      },
+    ]
   },
   {
     path: "/",
-    component: () => import("../views/Dashboard.vue"),
+    component: () =>
+      import ("../views/Dashboard.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: "/**",
-    component: () => import("../views/NotFound.vue"),
+    component: () =>
+      import ("../views/NotFound.vue"),
   },
 ];
 
@@ -138,5 +204,6 @@ router.beforeEach((routeTo, routeFrom, next) => {
   } else {
     next();
   }
+
 });
 export default router;

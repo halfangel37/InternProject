@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { createLogger} from "vuex";
+import Vuex, { createLogger } from "vuex";
 
 import register from "@/register/store";
 import profile from "@/profile/store";
@@ -9,7 +9,7 @@ import signout from "@/signout/store";
 import companies from "@/companies/store";
 import employees from "@/employees/store";
 import forgotPassword from "@/forgotPassword/store";
-import resetPassword  from "@/resetPassword/store";
+import resetPassword from "@/resetPassword/store";
 
 Vue.use(Vuex);
 

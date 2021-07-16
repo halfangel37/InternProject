@@ -9,3 +9,4 @@ export const FORGOT_PASSWORD_ENDPOINT = AUTH + "/forgot-password";
 export const RESET_PASSWORD_ENDPOINT = AUTH + "/reset-password";
 export const CHANGE_PASSWORD_ENDPOINT = ACCOUNT + "/change-password";
 export const COMPANY_ENDPOINT = "/companies";
+export const DELETE_COMPANY_ENDPOINT = "/companies";

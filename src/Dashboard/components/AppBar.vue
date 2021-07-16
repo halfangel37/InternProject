@@ -9,33 +9,33 @@
       <v-btn color="#f5f5f5" id="hide-menu">
         <v-icon color="#1F2939">{{ icons.mdiMenu }}</v-icon>
       </v-btn>
-      <v-menu left bottom>
+      <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             color="#f5f5f5"
-            v-btn
+            dark
             v-bind="attrs"
             v-on="on"
             class="logo-company"
           >
             <v-btn color="rgb(242, 179, 52)" style="box-shadow: none">
-              <h4 style="color: white">E</h4>
+              <h4 style="color: white">C</h4>
             </v-btn>
-            <div class="mr-1"></div>
+            <div class="mr-2"></div>
             <span style="color: #616e7c; font-size: 15px" class="font-res">
-              ez-company
+              {{ company.name }}
             </span>
-            <div class="ml-1"></div>
             <v-icon color="#616e7c">{{ icons.mdiChevronDown }}</v-icon>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click="() => {}">
-            <v-list-item-title>
-              Eztek Company
-              <v-divider />
-              Company List
-            </v-list-item-title>
+          <v-list-item
+            @click="selectCompany(company.id)"
+            v-for="company in companies"
+            :key="company.id"
+            @change="changeCompany(company)"
+          >
+            <v-list-item-title>{{ company.name }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -121,15 +121,28 @@ export default {
     ],
   }),
   methods: {
+    selectCompany(companyId) {
+      this.$store.dispatch("companies/selectCompany", companyId);
+      this.$router.push({ path: `/companies/${companyId}/setting` });
+    },
     signout() {
       this.$store
         .dispatch("signout/signoutAccount")
         .then(this.$route.push({ path: "/auth/signin" }));
     },
+    getCompanies() {
+      this.$store.dispatch("companies/getCompanies");
+    },
+    changeCompany(company) {
+      this.$store.dispatch("companies/changeCompany", company);
+    },
   },
   computed: {
     ...mapGetters({
+      companies: "companies/allCompanies",
+      selectedCompany: "companies/selectedCompany",
       user: "profile/userGetter",
+      company: "companies/getCompanyGetter",
     }),
   },
 };

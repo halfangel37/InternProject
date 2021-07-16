@@ -14,20 +14,19 @@
           dark
           color="rgb(242, 179, 52)"
           class="d-flex justify-center"
+          to="/companies"
         >
           <h5 style="color: white; font-size: 20px">C</h5>
         </v-btn>
         <v-divider />
         <div class="mt-16"></div>
         <v-btn color="rgb(242, 179, 52)" fab dark small class="move-btn">
-          <v-icon @click.stop="sidebarMenu = !sidebarMenu"
-            >mdi-chevron-left</v-icon
-          >
+          <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
         <router-link
           v-for="(link, i) in links"
           :key="i"
-          :to="link.to"
+          :to="`/companies/${company.id}/${link.to}`"
           class="list-item"
           style="color: #c8cde2; font-weight: 300; font-size: 18px"
         >
@@ -46,46 +45,52 @@
   </v-navigation-drawer>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     links: [
       {
-        to: "/dashboard",
+        to: "dashboard",
         icon: "mdi-view-dashboard",
         text: "Dashboard",
       },
       {
-        to: "/companies/sales",
+        to: "sales",
         icon: "mdi-currency-usd",
         text: "Sales",
       },
       {
-        to: "/companies/contacts",
+        to: "contacts",
         icon: "mdi-domain",
         text: "Contacts",
       },
       {
-        to: "/companies/products",
+        to: "products",
         icon: "mdi-cube-outline",
         text: "Products",
       },
       {
-        to: "/companies/fees",
+        to: "fees",
         icon: "mdi-calculator-variant-outline",
         text: "Fees",
       },
       {
-        to: "/companies/employees",
+        to: "employees",
         icon: "mdi-account-supervisor",
         text: "Employees",
       },
       {
-        to: "/companies/setting",
+        to: "setting",
         icon: "mdi-cog",
         text: "Company setting",
       },
     ],
   }),
+  computed: {
+    ...mapGetters({
+      company: "companies/getCompanyGetter",
+    }),
+  },
 };
 </script>
 <style>
