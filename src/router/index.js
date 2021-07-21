@@ -1,13 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store";
+
+import Content from "../layouts/Content.vue";
+
 Vue.use(VueRouter);
+
+// TODO separate the routers to individual module
 
 const routes = [{
     path: "/auth",
     name: "AuthPage",
-    component: () =>
-      import ("../views/AuthPage.vue"),
+    component: () => import ("../views/AuthPage.vue"),
     children: [{
         path: "signup",
         name: "Signup",
@@ -36,150 +40,123 @@ const routes = [{
     ],
   },
   {
-    path: "/companies",
-    component: () =>
-      import ("../views/Dashboard.vue"),
+    path: "/",
+    component: () => import ("../layouts/dashboard/DashboardLayout.vue"),
     meta: { requiresAuth: true },
-    props: true,
-    children: [{
-        path: "",
-        component: () =>
-          import ("../companies/views/CompaniesDashboard.vue"),
-        beforeEnter(routeTo, routeFrom, next) {
-          store
-            .dispatch("companies/getCompanyById",
-              routeTo.params.companyId,
-            )
-          store
-            .dispatch("companies/getCompanies", {
-              PageNumber: 1,
-              PageSize: 10,
-            })
-            .then(() => {
-              next();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        },
-      },
-      //============================================
+    beforeEnter(routeTo, routeFrom, next) {
+      store
+        .dispatch("profile/getUserProfile",
+          routeTo.params.companyId,
+        )
+        // TODO handle error
+        .then(() => next());
+    },
+    children: [
       {
-        path: "/profile",
-        component: () =>
-          import ("../profile/views/Profile.vue"),
+        path: "dashboard",
+        component: () => import ("../Dashboard/views/DashboardPage.vue"),
       },
       {
-        path: ":companyId/contacts",
-        component: () =>
-          import ("../views/Contacts.vue"),
-        beforeEnter(routeTo, routeFrom, next) {
-          store
-            .dispatch("companies/getCompanyById",
-              routeTo.params.companyId,
-            )
-            .then(() => next());
-        }
+        path: "profile",
+        component: () => import ("../profile/views/Profile.vue"),
       },
       {
-        path: ":companyId/products",
-        component: () =>
-          import ("../views/Products.vue"),
-        beforeEnter(routeTo, routeFrom, next) {
-          store
-            .dispatch("companies/getCompanyById",
-              routeTo.params.companyId,
-            )
-            .then(() => next());
-        }
-      },
-      {
-        path: ":companyId/products/create",
-        component: () =>
-          import ("../product/views/CreateProduct.vue"),
-      },
-      {
-        path: ":companyId/sales",
-        component: () =>
-          import ("../views/Sales.vue"),
-        beforeEnter(routeTo, routeFrom, next) {
-          store
-            .dispatch("companies/getCompanyById",
-              routeTo.params.companyId,
-            )
-            .then(() => next());
-        }
-      },
-      {
-        path: ":companyId/fees",
-        component: () =>
-          import ("../views/Fees.vue"),
-        beforeEnter(routeTo, routeFrom, next) {
-          store
-            .dispatch("companies/getCompanyById",
-              routeTo.params.companyId,
-            )
-            .then(() => next());
-        }
-      },
-      {
-        path: ":companyId/employees",
-        component: () =>
-          import ("../employees/views/EmployeesDashboard.vue"),
+        path: "companies",
+        component: Content,
         props: true,
-        children: [{
-          path: "",
-          props: true,
-          component: () =>
-            import ("../employees/views/EmployeesDashboard.vue"),
-          beforeEnter(routeTo, routeFrom, next) {
-            store
-              .dispatch("companies/getCompanyById",
-                routeTo.params.companyId,
-              ).then(() => next());
-            store
-              .dispatch("employees/getEmployees", {
-                PageNumber: 1,
-                PageSize: 10,
-                companyId: routeTo.params.companyId,
-              }).then(() => next());
-          }
-        }]
-      },
-      {
-        path: ":companyId/setting",
-        component: () =>
-          import ("../views/Setting.vue"),
         beforeEnter(routeTo, routeFrom, next) {
           store
-            .dispatch("companies/getCompanyById",
+            .dispatch("companies/getCompanies",
               routeTo.params.companyId,
             )
+            // TODO handle error
             .then(() => next());
-        }
-      },
-      {
-        path: "create",
-        component: () =>
-          import ("../companies/views/RegisterCompany.vue"),
-      },
-      {
-        path: ":companyId/employees/create",
-        component: () =>
-          import ("../employees/views/CreateEmployee.vue"),
-      },
-      {
-        path: "/:companies/:companyId/dashboard",
-        component: () =>
-          import ("../views/WelcomeDashboard.vue"),
+        },
+        children: [
+          {
+            path: "",
+            component: () => import ("../companies/views/ListCompaniesPage.vue")
+          },
+          {
+            path: "create",
+            name: "RegisterCompany",
+            component: () =>
+              import ("../companies/views/RegisterCompanyPage.vue"),
+          },
+          {
+            path: ":companyId",
+            component: Content,
+            beforeEnter(routeTo, routeFrom, next) {
+              store
+                .dispatch("companies/selectCompany",
+                  routeTo.params.companyId,
+                );
+
+              store
+                .dispatch("companies/getCompanyById",
+                  routeTo.params.companyId,
+                )
+                // TODO handle error
+                .then(() => next());
+            },
+            children: [
+              {
+                path: "setting",
+                component: () => import ("../views/Setting.vue")
+              },
+              {
+                path: "contacts",
+                component: () => import ("../views/Contacts.vue"),
+              },
+              {
+                path: "products",
+                name: 'products',
+                component: () => import ("../views/Products.vue"),
+              },
+              {
+                path: "products/create",
+                component: () => import ("../product/views/CreateProduct.vue"),
+              },
+              {
+                path: "sales",
+                component: () => import ("../views/Sales.vue"),
+              },
+              {
+                path: "fees",
+                component: () => import ("../views/Fees.vue"),
+              },
+              {
+                path: "employees",
+                component: () => import ("../employees/views/EmployeesDashboard.vue"),
+                props: true,
+                children: [
+                  {
+                    path: "",
+                    props: true,
+                    component: () => import ("../employees/views/EmployeesDashboard.vue"),
+                    beforeEnter(routeTo, routeFrom, next) {
+                      store
+                        .dispatch("employees/getEmployees", {
+                          PageNumber: 1,
+                          PageSize: 10,
+                          companyId: routeTo.params.companyId,
+                        })
+                        // TODO: handle error
+                        .then(() => next());
+                    }
+                }]
+              },
+              {
+                path: "employees/create",
+                name: "CreateEmployee",
+                component: () => import ("../employees/views/CreateEmployee.vue"),
+              }
+            ]
+          },
+          
+        ]
       },
     ]
-  },
-  {
-    path: "/",
-    component: () =>
-      import ("../views/Dashboard.vue"),
-    meta: { requiresAuth: true },
   },
   {
     path: "/**",

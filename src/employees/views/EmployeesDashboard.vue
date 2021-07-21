@@ -3,7 +3,11 @@
     <v-container>
       <v-row justify="end" align="baseline">
         <v-col cols="12" md="1">
-          <CreateButton :link="link" />
+          <CreateButton  @onCreate="onCreate()"/>
+
+          <!-- <v-btn rounded light class="color-light-orange" @click="onCreate"
+          >+ CREATE</v-btn
+          > -->
         </v-col>
 
         <v-col cols="12" md="2" class="ml-5">
@@ -91,7 +95,7 @@ export default {
       showAll: true,
       statusEmployee: 2,
       search: "",
-      link: `/companies/${this.$route.params.companyId}/employees/create`,
+      // link: `/companies/${this.$route.params.companyId}/employees/create`,
     };
   },
 
@@ -152,6 +156,10 @@ export default {
     redirectUpdateEmployee(employee) {
       this.$router.push({ path: `employees/${employee.id}` });
     },
+
+    onCreate() {
+      this.$router.push({ name: "CreateEmployee" });
+    }
   },
 };
 

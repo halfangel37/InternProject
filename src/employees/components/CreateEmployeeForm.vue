@@ -6,8 +6,6 @@
       @submit.prevent="onSubmit()"
       lazy-validation
     >
-      <h1 class="mb-12">Create new employee</h1>
-
       <v-card class="mb-5">
         <v-card-title>Name</v-card-title>
         <v-card-text>

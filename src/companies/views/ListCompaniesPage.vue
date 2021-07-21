@@ -2,7 +2,7 @@
   <div>
     <v-container>
       <v-row class="align-baseline justify-center justify-space-around">
-        <CreateButton :link="link" />
+        <CreateButton @onCreate="onCreate()" />
         <ShowCompanies />
         <FilterCompanies />
         <RowsPerPage :rowsPerPage="currentRowsPerPage" />
@@ -10,14 +10,14 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <CompaniesTable :items="companies" @delete-company="deleteCompany"/> 
+          <CompaniesTable :items="companies" @delete-company="deleteCompany" />
           <v-pagination
             circle
             @input="next"
             previous="prePage"
             :total-visible="5"
             v-model="currentPage"
-            :length="totalPages"
+            :length="pagination.totalPages"
           >
           </v-pagination>
         </v-col>
@@ -54,8 +54,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      companies: "companies/allCompanies",
-      totalPages: "companies/selectTotalPage",
+      companies: "companies/selectAllCompanies",
+      pagination: "companies/selectCompanyPaging",
     }),
   },
   methods: {
@@ -76,11 +76,17 @@ export default {
       });
     },
     mounted() {
-      this.$store.dispatch("companies/getCompanies");
+      this.$store.dispatch("companies/getCompanies", {
+        PageNumber: 1,
+        PageSize: 10,
+      });
     },
     deleteCompany(companyId) {
-      this.$store.dispatch("companies/deleteCompany", companyId)
-    }
+      this.$store.dispatch("companies/deleteCompany", companyId);
+    },
+    onCreate() {
+      this.$router.push({ name: "RegisterCompany" });
+    },
   },
 };
 </script>

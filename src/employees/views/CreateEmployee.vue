@@ -1,11 +1,11 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="12" md="8">
-        <CreateEmployeeForm @submit="onCreateEmployee" />
-      </v-col>
-    </v-row>
-  </v-container>
+  <PageContainer>
+    <template #page-title>Create new employee </template>
+
+    <template #page-content>
+      <CreateEmployeeForm @submit="onCreateEmployee" />
+    </template>
+  </PageContainer>
 </template>
 
 <script>

@@ -7,8 +7,8 @@ export { create };
 const getCompanies = (pageNumber, pageSize) => {
   return httpClient.get(`${COMPANY_ENDPOINT}`, {
     params: {
-      PageNumber: pageNumber,
-      PageSize: pageSize,
+      pageNumber,
+      pageSize
     },
   });
 };

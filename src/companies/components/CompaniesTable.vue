@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-data-table
-      v-model="selected"
       :headers="headers"
       :items="items"
       show-select
@@ -27,6 +26,7 @@
         </v-menu>
       </template>
     </v-data-table>
+    <div class="mt-10"></div>
      <Dialog
       :title="dialogTitle"
       :content="dialogContent"

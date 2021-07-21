@@ -67,6 +67,8 @@
                 Click here if you want to go to
                 <a href="" style="text-decoration: none">discreet desk</a>
               </p>
+
+              <!-- // TODO: reload page when click to this button -->
               <v-btn
                 color="#72418b"
                 dark

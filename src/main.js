@@ -7,7 +7,11 @@ import vuetify from "./plugins/vuetify";
 import "nprogress/nprogress.css";
 import "./plugins/vuetoast";
 
+import PageContainer from "./components/PageContainer.vue"
+
 Vue.config.productionTip = false;
+Vue.component("PageContainer", PageContainer);
+
 new Vue({
   router,
   store,

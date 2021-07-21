@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col class="justify-start">
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -14,8 +14,12 @@
               <h4 style="color: white">C</h4>
             </v-btn>
             <div class="mr-2"></div>
-            <span style="color: #616e7c; font-size: 15px" class="font-res">
-              {{ company.name }}
+            <span
+              style="color: #616e7c; font-size: 15px"
+              class="font-res"
+              v-if="selectedCompany"
+            >
+              {{ selectedCompany.name }}
             </span>
             <v-icon color="#616e7c">{{ icons.mdiChevronDown }}</v-icon>
           </v-btn>
@@ -24,17 +28,16 @@
           <v-list-item
             v-for="company in companies"
             :key="company.id"
-            @change="changeCompany(company)"
+            @click="selectCompany(company.id)"
           >
             <v-list-item-title>{{ company.name }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
     </v-col>
-    <v-col></v-col>
-    <v-col class="d-flex align-center">
-      <a href="" class="contact-us">Contact Us</a>
-      <v-menu left bottom>
+    <v-col class="d-flex align-center justify-end">
+      <a class="contact-us">Contact Us</a>
+      <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" v-on="on" color="#f5f5f5" id="hide-option">
             <h5 style="color: #1f2933; font-size: 15px; font-weight: 400">
@@ -56,14 +59,13 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn @click="signout" id="hide-option" color="#f5f5f5"
-        ><v-icon color="#f2b334">{{ icons.mdiLogoutVariant }}</v-icon></v-btn
-      >
+      <v-btn @click="signout" id="hide-option" color="#f5f5f5">
+        <v-icon color="#f2b334">{{ icons.mdiLogoutVariant }}</v-icon>
+      </v-btn>
     </v-col>
   </v-row>
 </template>
 <script>
-import store from "@/store";
 import {
   mdiAccount,
   mdiChevronDown,
@@ -72,6 +74,7 @@ import {
   mdiDotsHorizontal,
 } from "@mdi/js";
 import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
     icons: {
@@ -91,31 +94,19 @@ export default {
       companies: "companies/selectAllCompanies",
       selectedCompany: "companies/selectSelectedCompany",
       user: "profile/userGetter",
-      company: "companies/getCompanyGetter",
     }),
   },
   methods: {
     selectCompany(companyId) {
-      this.$store.dispatch("companies/selectCompany", companyId);
-      this.$router.push({ path: `/companies/${companyId}/setting` });
-    },
-    getCompanies() {
-      this.$store.dispatch("companies/getCompanies");
-    },
-    changeCompany(company) {
-      this.$store.dispatch("companies/changeCompany", company);
-      this.$router.push({ path: `/companies/${company.id}/setting` });
+      this.$store.dispatch("companies/selectCompany", companyId).then(() => {
+        this.$router.push({ path: `/companies/${companyId}/setting` });
+      });
     },
     signout() {
-      this.$store
-        .dispatch("signout/signoutAccount")
-        .then(this.$route.push({ path: "/auth/signin" }));
+      this.$store.dispatch("signout/signoutAccount").then(() => {
+        this.$route.push({ path: "/auth/signin" });
+      });
     },
-  },
-  beforeRouteUpdate(to, next) {
-    store
-      .dispatch("companies/getCompanyById", to.params.companyId)
-      .then(() => next("/create"));
   },
 };
 </script>

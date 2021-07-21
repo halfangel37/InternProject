@@ -1,95 +1,103 @@
 import Vue from "vue";
-import NProgress from "nprogress";
-import { create } from "@/http/companies";
-export const namespaced = true;
-import { getCompanies, getCompanyById, deleteCompanies } from "@/http/companies";
+import progress from "nprogress";
 
+import { create, getCompanies, getCompanyById, deleteCompanies } from "@/http/companies";
 
 const state = {
   companies: [],
   selectedCompanyId: undefined,
-  company: {},
-  totalPages: 0,
+  pagination: {
+    pageNumber: 1,
+    totalPages: 0,
+    pageSize: 10
+  },
 };
 
 const getters = {
-  allCompanies: (state) => state.companies,
-  selectTotalPage: (state) => state.totalPages,
-  selectedCompanyId: (state) => state.selectedCompanyId,
-  selectedCompany: (state) => state.companies.find((c) => c.id === state.selectedCompanyId),
-  getCompanyGetter: (state) => state.company,
-  getCompanyByIdGetter: state => (id) => { return state.companies.find((company) => company.id === id) },
+  selectAllCompanies: (state) => state.companies,
+  selectCompanyPaging: (state) => state.pagination,
+  selectSelectedCompanyId: (state) => state.selectedCompanyId,
+  selectSelectedCompany: (state) => state.companies.find((c) => c.id === state.selectedCompanyId),
 };
 
 const mutations = {
-  GET_COMPANIES(state, companies) {
+  SET_ALL_COMPANIES(state, companies) {
     state.companies = companies;
+    if(!state.selectedCompanyId && companies.length > 0){
+      state.selectedCompanyId = companies[0].id;
+    }
   },
-  DELETE_COMPANIES(state, companyId) {
+  UPSERT_ONE_COMPANY(state, company) {
+    const index = state.companies.findIndex(c => c.id === company.id);
+    if(index >= 0) {
+      state.companies[index] = company;
+    } else {
+      state.companies.push(company);
+    }
+  },
+  REMOVE_ONE_COMPANY(state, companyId) {
     let companies = state.companies.filter(c => c.id != companyId)
-    state.companies = companies
+    state.companies = companies;
+    
+    /**
+     * If we delete the selected company,
+     * so we should update the selected company to the first company in the list
+     */
+    if (companyId == state.selectedCompanyId && companies.length > 0) {
+      state.selectedCompanyId = companies[0].id;
+    }
   },
-  SET_TOTAL_PAGES(state, totalPages) {
-    state.totalPages = totalPages;
+  SET_PAGINATION(state, pagination) {
+    state.pagination = {
+      ...state.pagination,
+      ...pagination
+    };
   },
   SET_SELECTED_COMPANY_ID(state, selectedCompanyId) {
-    state.selectedCompanyId = selectedCompanyId;
-  },
-  SET_COMPANY(state, company) {
-    state.company = {},
-      state.company = company;
+    state.selectedCompanyId = parseInt(selectedCompanyId)
   },
 };
+
+// TODO: handle error request
 const actions = {
-  getCompanies({ commit }, {
-    PageNumber,
-    PageSize
-  }) {
-    NProgress.start()
-    return getCompanies(
-      PageNumber,
-      PageSize).then((response) => {
-      commit(
-        "SET_TOTAL_PAGES",
-        parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages)
-      );
-      commit("GET_COMPANIES", response.data)
-      NProgress.done();
-      commit("SET_COMPANY", response.data[0])
-      NProgress.done();
-    })
+  getCompanies({ commit, getters }) {
+    progress.start();
+    const { pageNumber, pageSize } = getters.selectCompanyPaging;
+    return getCompanies(pageNumber, pageSize)
+    .then((response) => {
+      const totalPages = parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages);
+      
+      commit("SET_PAGINATION", {totalPages});
+      commit("SET_ALL_COMPANIES", response.data);
+
+      progress.done();
+    });
   },
+
   deleteCompany({ commit }, companyId) {
-    NProgress.start();
+    progress.start();
     return deleteCompanies(companyId).then(() => {
-      NProgress.done();
-      commit("DELETE_COMPANIES", companyId);
+      progress.done();
+      commit("REMOVE_ONE_COMPANY", companyId);
     })
   },
-  changeCompany({ commit }, company) {
-    commit("SET_COMPANY", company)
-  },
+
   selectCompany({ commit }, companyId) {
     commit("SET_SELECTED_COMPANY_ID", companyId);
   },
-  getCompanyById({ commit, getters }, companyId) {
-    const comp = getters.getCompanyByIdGetter(companyId)
-    if (comp) {
-      commit('SET_COMPANY', comp)
-      return comp;
-    } else {
-      return getCompanyById(companyId).then((response) => {
-        commit('SET_COMPANY', response.data)
-      })
-    }
+
+  getCompanyById({ commit }, companyId) {
+    return getCompanyById(companyId).then((response) => {
+      commit("UPSERT_ONE_COMPANY", response.data);
+    });
   },
-  registerCompany({ commit }, companyInfor) {
+
+  registerCompany(_, companyInfor) {
     return create(companyInfor)
       .then(() => {
         Vue.$toast.success("Create company successfully!");
       })
       .catch((error) => {
-        commit("SET_ERROR_MESSAGE", "");
         Vue.$toast.error(error.response.data.errors[0].title);
       });
   },
