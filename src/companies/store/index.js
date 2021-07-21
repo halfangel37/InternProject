@@ -95,7 +95,6 @@ const actions = {
   registerCompany(_, companyInfor) {
     return create(companyInfor)
       .then(() => {
-        Vue.$toast.success("Create company successfully!");
       })
       .catch((error) => {
         Vue.$toast.error(error.response.data.errors[0].title);

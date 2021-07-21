@@ -5,6 +5,7 @@
       :items="employeesDisplay"
       show-select
       item-key="employeeNumber"
+      :item-class="itemRowBackground"
       disable-pagination
       hide-default-footer
       :search="search"
@@ -39,6 +40,14 @@
         {{ header.text.toUpperCase() }}
       </template>
 
+      <template v-slot:[`item.name`]="{ item }">
+        <td class="itemFormat">
+          {{
+            item.firstName + " " + item.lastName
+          }}
+        </td>
+      </template>
+
       <template v-slot:[`item.birthDate`]="{ item }">
         <td class="itemFormat">
           {{
@@ -55,9 +64,9 @@
         <td class="itemFormat">
           <v-switch
             v-model="item.status"
-            @click.capture.native.stop="changeStatus(item)"
+            @click.capture.native.stop="confirmChangeStatus(item)"
             insert
-            :label="labelStatus(item.status)"
+            :label="item.status | status"
             color="success"
           ></v-switch>
         </td>
@@ -71,26 +80,38 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item v-if="item.status === 0" @click="changeStatus(item)">
-              Enable
+            <v-list-item @click="confirmChangeStatus(item)">
+              {{ item.status === 0 ? "Enable" : "Disable" }}
             </v-list-item>
-            <v-list-item
-              v-else
-              @click="changeStatus(item)"
-              :rules="item.status === 0"
-            >
-              Disable
+            <v-list-item @click="confirmDeleteEmployee(item.id)"> 
+              Delete
             </v-list-item>
-            <v-list-item @click="deleteProduct(item)"> Delete </v-list-item>
           </v-list>
         </v-menu>
       </template>
     </v-data-table>
+
+    <confirmDialog
+      :title="dialogTitle"
+      :content="dialogContent"
+      :isDialog="isDialog"
+      @on-close="isDialog = false"
+      :btnAccept="'OK'"
+      :btnNotAccept="'Cancel'"
+      @on-confirm="
+        actionType === 'changeStatus' ? changeStatus() : deleteEmployee()
+      "
+    ></confirmDialog>
   </div>
 </template>
 
 <script>
+import confirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
+import "@/shared/style/style.css";
 export default {
+  components: {
+    confirmDialog
+  },
   props: {
     search: {
       type: String,
@@ -100,6 +121,7 @@ export default {
     },
   },
   data: () => ({
+    dialogDelete: false,
     headers: [
       {
         text: "Status",
@@ -114,29 +136,69 @@ export default {
       { text: "Birth date", value: "birthDate" },
       { text: "", value: "actions", sortable: false },
     ],
+
+    selectedEmployee: undefined,
+    isDialog: false,
+    dialogTitle: "",
+    dialogContent: "",
+    ON_STATUS: 1,
+    OFF_STATUS: 0,
   }),
 
   methods: {
-    labelStatus(status) {
-      if (status === 1 || status) return "Enable";
-      else return "Disable";
+    itemRowBackground(item) {
+      return this.employeesDisplay.indexOf(item) % 2 < 1 ? "bg-gray" : "bg-white";
     },
-
     statusSliderChanged(status) {
       const statusEmployee =
         status === 1 ? 0 : status === 0 ? 1 : !status ? 0 : 1;
       return statusEmployee;
     },
 
-    changeStatus(employee) {
-      let employeeStatus = this.statusSliderChanged(employee.status);
-      this.$emit("change-status", employee.id, employeeStatus);
-    },
-
     redirectUpdateEmployee(employee) {
       this.$emit("click-row", employee)
     },
+
+    confirmChangeStatus(employee) {
+      const actionTypeName =
+        employee.status === this.ON_STATUS
+          ? "disable"
+          : employee.status === this.OFF_STATUS
+          ? "enable"
+          : !employee.status
+          ? "enable"
+          : "disable";
+      this.actionType = "changeStatus";
+      this.selectedEmployee = employee;
+      this.isDialog = true
+      this.dialogTitle = `Confirm ${actionTypeName} selected employee!`;
+      this.dialogContent = `Are you sure you want to ${actionTypeName} selected employee?`;
+    },
+  
+    changeStatus() {
+      const employeeStatus = this.statusSliderChanged(this.selectedEmployee.status);
+      this.$emit("change-status", {
+        employeeId: this.selectedEmployee.id,
+        employeeStatus: employeeStatus
+      },
+      );
+    },
+
+    confirmDeleteEmployee(employeeId) {
+      this.selectedEmployee = employeeId;
+      this.actionTypeName = "delete";
+      this.actionType = "deleteEmployee";
+      this.isDialog = true
+      this.dialogTitle = 'Confirm delete selected employee!';
+      this.dialogContent = 'Are you sure you want to delete selected employee?';
+    },
+
+    deleteEmployee() {
+      this.$emit("delete-employee", {employeeId: this.selectedEmployee})
+    },
+
   },
+
 };
 </script>
 

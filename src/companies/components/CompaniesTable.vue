@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import Dialog from "@/components/dialogs/views/ConFirmDialog.vue";
+import Dialog from "@/components/dialogs/views/ConfirmDialog.vue";
 export default {
   components: {
     Dialog,

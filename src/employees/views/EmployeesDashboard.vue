@@ -4,10 +4,6 @@
       <v-row justify="end" align="baseline">
         <v-col cols="12" md="1">
           <CreateButton  @onCreate="onCreate()"/>
-
-          <!-- <v-btn rounded light class="color-light-orange" @click="onCreate"
-          >+ CREATE</v-btn
-          > -->
         </v-col>
 
         <v-col cols="12" md="2" class="ml-5">
@@ -15,7 +11,7 @@
             dense
             :items="status"
             :value="currentStatus"
-            v-on:change="selectedStatus"
+            v-on:change="filterStatus"
             label="Select"
             solo
             :append-icon="'mdi-chevron-down'"
@@ -57,10 +53,12 @@
             :search="search"
             @change-status="changeStatus"
             @click-row="redirectUpdateEmployee"
+            @delete-employee="deleteEmployee"
           />
 
           <div class="text-center pt-2">
             <v-pagination
+              v-if="totalPages > 1"
               circle
               @input="next"
               previous="prePage"
@@ -80,6 +78,7 @@
 import CreateButton from "../../components/CreateButton.vue";
 import { mapGetters } from "vuex";
 import EmployeesList from "../components/EmployeesList.vue";
+
 export default {
   components: {
     CreateButton,
@@ -88,21 +87,20 @@ export default {
   data() {
     return {
       status: ["Show all", "Show enabled", "Show disabled"],
-      rowsPerPage: [2, 10, 20, 50, 100],
+      rowsPerPage: [10, 20, 50, 100],
       currentRowsPerPage: 10,
       currentPage: 1,
       currentStatus: "Show all",
       showAll: true,
       statusEmployee: 2,
       search: "",
-      // link: `/companies/${this.$route.params.companyId}/employees/create`,
     };
   },
 
   computed: {
     ...mapGetters({
-      employees: "employees/getEmployeesGetter",
-      totalPages: "employees/totalPagesGetter",
+      employees: "employees/getEmployees",
+      totalPages: "employees/totalPages",
     }),
 
     employeesDisplay: function () {
@@ -133,19 +131,12 @@ export default {
       });
     },
 
-    selectedStatus(status) {
-      if (status === "Show all") {
-        this.showAll = true;
-      } else if (status === "Show enabled") {
-        this.statusEmployee = 1;
-        this.showAll = false;
-      } else {
-        this.showAll = false;
-        this.statusEmployee = 0;
-      }
+    filterStatus(status) {
+      this.showAll = status === "Show all" ? true : false;
+      this.statusEmployee = status === "Show enabled" ? 1 : 0;
     },
 
-    changeStatus(employeeId, employeeStatus) {
+    changeStatus({employeeId, employeeStatus}) {
       this.$store.dispatch("employees/changeStatus", {
         companyId: this.$route.params.companyId,
         employeeId: employeeId,
@@ -157,12 +148,17 @@ export default {
       this.$router.push({ path: `employees/${employee.id}` });
     },
 
+    deleteEmployee({employeeId}) {
+      this.$store.dispatch("employees/deleteEmployee", {
+        companyId: this.$route.params.companyId,
+        employeeId: employeeId
+      })
+    },
     onCreate() {
       this.$router.push({ name: "CreateEmployee" });
     }
   },
 };
-
 
 </script>
 <style lang="scss" scoped></style>

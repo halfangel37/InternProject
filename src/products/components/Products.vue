@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import ConfirmDialog from "@/components/dialogs/views/ConFirmDialog.vue";
+import ConfirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
 import "@/shared/style/style.css";
 export default {
   components: {
@@ -141,8 +141,8 @@ export default {
     confirmDeleteProduct(product) {
       this.selectedProduct = product;
       this.actionType = "deleteProduct";
-      this.dialogTitle = `Confirm delete selected product!`;
-      this.dialogContent = `Are you sure you want to delete selected product!`;
+      this.dialogTitle = 'Confirm delete selected product!';
+      this.dialogContent = 'Are you sure you want to delete selected product!';
       this.isDialog = true;
     },
     deleteProduct() {

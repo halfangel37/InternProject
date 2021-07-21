@@ -1,8 +1,9 @@
 import Vue from "vue";
 import { create } from "@/http/employees";
-import { patchUpdateEmployee, getEmployees } from "@/http/employees";
+import { updateStatusEmployee, getEmployees, deleteEmployee } from "@/http/employees";
 import { STATUS } from "@/http/status-code";
 import NProgress from "nprogress";
+
 export const namespaced = true;
 
 const state = {
@@ -23,6 +24,11 @@ const mutations = {
     const index = state.employees.indexOf(employee);
     state.employees[index].status = status;
   },
+
+  DELETE_EMPLOYEE(state, employeeId) {
+    state.employees = state.employees.filter(e => e.id != employeeId)
+  },
+
 };
 
 const actions = {
@@ -59,7 +65,7 @@ const actions = {
   },
 
   changeStatus({ commit, getters }, { companyId, employeeId, employeeStatus }) {
-    const employee = getters.getEmployeeByIdGetter(employeeId);
+    const employee = getters.getEmployeeById(employeeId);
     let payload = [
       {
         value: employeeStatus,
@@ -68,7 +74,7 @@ const actions = {
       },
     ];
     NProgress.start();
-    return patchUpdateEmployee(companyId, employeeId, payload)
+    return updateStatusEmployee(companyId, employeeId, payload)
       .then(() => {
         commit("SET_EMPLOYEE_STATE", {
           employee: employee,
@@ -90,12 +96,37 @@ const actions = {
         NProgress.done();
       });
   },
+
+  deleteEmployee( {commit}, {companyId, employeeId}) {
+    NProgress.start();
+    return deleteEmployee(companyId, employeeId)
+    .then(() => {
+      commit("DELETE_EMPLOYEE", employeeId)
+      Vue.$toast.open({
+        message: "Delete employee successfully!",
+        type: "success",
+        duration: 3000,
+        dismissible: true,
+        position: "top-right",
+      });
+      NProgress.done();
+    })
+    .catch((err) => {
+      Vue.$toast.open({
+        message: err,
+        type: "success",
+        duration: 3000,
+        dismissible: true,
+        position: "top-right",
+      });
+    })
+}
 };
 
 const getters = {
-  getEmployeesGetter: (state) => state.employees,
-  totalPagesGetter: (state) => state.totalPages,
-  getEmployeeByIdGetter: (state) => (id) => {
+  getEmployees: (state) => state.employees,
+  totalPages: (state) => state.totalPages,
+  getEmployeeById: (state) => (id) => {
     return state.employees.find((employee) => employee.id === id);
   },
 };

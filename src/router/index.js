@@ -151,6 +151,7 @@ const routes = [
               },
               {
                 path: "employees",
+                name: "EmployeeList",
                 component: () =>
                   import("../employees/views/EmployeesDashboard.vue"),
                 props: true,

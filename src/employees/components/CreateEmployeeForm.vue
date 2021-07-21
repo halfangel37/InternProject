@@ -5,7 +5,7 @@
       v-model="formValidity"
       @submit.prevent="onSubmit()"
       lazy-validation
-    >
+    >     
       <v-card class="mb-5">
         <v-card-title>Name</v-card-title>
         <v-card-text>
@@ -42,6 +42,7 @@
                 :rules="emailRules"
                 label="Email"
                 required
+                validate-on-blur
                 outlined
               ></v-text-field>
             </v-col>
@@ -54,6 +55,7 @@
                 :rules="phoneNumberRules"
                 required
                 outlined
+                validate-on-blur
               ></v-text-field>
             </v-col>
           </v-row>
@@ -97,8 +99,21 @@
               </v-menu>
             </v-col>
           </v-row>
+
+          <v-row>
+            <v-col cols="12" md="1">
+              <v-switch
+              v-model="employeeInfo.status"
+              :label="employeeInfo.status | status"
+              ></v-switch>
+            </v-col>
+          </v-row> 
         </v-card-text>
       </v-card>
+
+      <v-btn outlined color="#72418b" x-large @click="cancelCreateEmployee()" class="mr-5"
+        >CANCEL</v-btn
+      >
 
       <v-btn color="#72418b" dark x-large type="submit" @click="validate()"
         >CREATE</v-btn
@@ -120,6 +135,7 @@ export default {
         phoneNumber: "",
         address: "",
         birthDate: "",
+        status: false
       },
       formValidity: false,
       firstNameRules: [validators.required("First name is required")],
@@ -145,9 +161,14 @@ export default {
         this.$emit("submit", this.employeeInfo);
       }
     },
+
     validate() {
       this.$refs.createEmployeeForm.validate();
     },
+
+    cancelCreateEmployee() {
+      this.$router.push({ path: `/companies/${this.$route.params.companyId}/employees` });
+    }
   },
 };
 </script>

@@ -12,7 +12,11 @@ const getEmployees = (companyId, pageNumber, pageSize) =>
     }
   })
 
-const patchUpdateEmployee = (companyId, employeeId, payload) => 
+const updateStatusEmployee = (companyId, employeeId, payload) => 
   httpClient.patch(`${COMPANY}/${companyId}${EMPLOYEE}/${employeeId}`, payload);
 
-export { create, getEmployees, patchUpdateEmployee }
+const deleteEmployee = (companyId, employeeId) => 
+  httpClient.delete(`${COMPANY}/${companyId}${EMPLOYEE}/${employeeId}`)
+
+
+export { create, getEmployees, updateStatusEmployee, deleteEmployee }

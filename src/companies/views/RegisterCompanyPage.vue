@@ -57,7 +57,7 @@
                 Please fill out the below to set up your company profile.<br />
                 The name and organization number will be auto-generated.
               </p>
-              <RegisterCompanyForm @register-company="register" />
+              <RegisterCompanyForm @register-company="register" @prev-step="cancelCreateCompany"/>
             </v-stepper-content>
 
             <v-stepper-content step="3">
@@ -68,13 +68,12 @@
                 <a href="" style="text-decoration: none">discreet desk</a>
               </p>
 
-              <!-- // TODO: reload page when click to this button -->
               <v-btn
                 color="#72418b"
                 dark
                 class="mr-5"
                 x-large
-                href="/companies"
+                to="/companies"
               >
                 COMPANY LIST
               </v-btn>
@@ -106,6 +105,9 @@ export default {
       this.nextStep = 3;
       this.$store.dispatch("companies/registerCompany", value);
     },
+    cancelCreateCompany() {
+      this.nextStep = 1;
+    }
   },
 };
 </script>
