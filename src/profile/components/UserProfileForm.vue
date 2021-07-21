@@ -7,7 +7,7 @@
       ></v-img>
       <v-file-input
         @change="onFileChange"
-        v-model="user.imageName"
+        v-model="imageFile"
         accept="image/png, image/jpeg, image/bmp"
         prepend-icon="mdi-camera"
         dense
@@ -56,21 +56,22 @@
 <script>
 import validators from "@/shared/form-validators";
 import { imageBaseUrl } from "@/config.js";
-
 export default {
   props: {
     user: Object,
     isButtonDisabled: Boolean,
   },
-  data: () => ({
-    imageUrl: imageBaseUrl,
-    nameRules: [validators.required("Name is required")],
-  }),
-
+  data() {
+    return {
+      imageUrl: imageBaseUrl,
+      nameRules: [validators.required("Name is required")],
+      imageFile: null,
+    };
+  },
   methods: {
     onFileChange() {
       const formData = new FormData();
-      formData.append("File", this.user.imageName);
+      formData.append("File", this.imageFile);
       this.$emit("update-avatar", formData);
     },
     onSubmit() {

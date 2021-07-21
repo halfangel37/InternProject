@@ -1,5 +1,10 @@
 import { changeUserPassword } from "@/http/auth";
-import { httpClient } from "../../http/httpClient";
+import {
+  getUserProfile,
+  updateUserProfile,
+  updateUserAvatar,
+} from "@/http/profile";
+
 import Vue from "vue";
 export default {
   namespaced: true,
@@ -25,13 +30,12 @@ export default {
         });
     },
     getUserProfile({ commit }) {
-      return httpClient.get("/accounts").then((response) => {
+      return getUserProfile().then((response) => {
         commit("SET_USER_PROFILE", response.data);
       });
     },
     updateUserProfile({ commit }, credentials) {
-      return httpClient
-        .put("/accounts", credentials)
+      return updateUserProfile(credentials)
         .then((response) => {
           commit("SET_USER_PROFILE", response.data);
           Vue.$toast.success("Your info have been saved.");
@@ -41,20 +45,18 @@ export default {
         });
     },
     updateUserAvatar({ commit }, formData) {
-      return httpClient
-        .post("/accounts/avatar", formData)
+      return updateUserAvatar(formData)
         .then((response) => {
           commit("UPDATE_USER_AVATAR", response.data);
           Vue.$toast.success("Your avatar have been saved.");
         })
         .catch((error) => {
-          Vue.$toast.error(error.response.data.errors);
+          Vue.$toast.error(error.response.data.errors.File[0]);
         });
     },
   },
-
   getters: {
     changePasswordMessageGetter: (state) => state.changePasswordMessage,
-    userGetter: (state) => state.user,
+    userGetter: (state) => ({...state.user}),
   },
 };

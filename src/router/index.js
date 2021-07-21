@@ -127,16 +127,17 @@ const routes = [
                     },
                   },
                   {
-                    path: ":productId",
-                    component: () => import("../views/Sales.vue"),
-                    name: "ProductDetail",
-                    props: true,
-                  },
-                  {
                     path: "create",
                     name: "createProduct",
                     component: () =>
                       import("../product/views/CreateProduct.vue"),
+                  },
+                  {
+                    path: ":productId",
+                    name: "ProductDetail",
+                    props: true,
+                    component: () =>
+                      import("../product/views/UpdateProduct.vue"),
                   },
                 ],
               },

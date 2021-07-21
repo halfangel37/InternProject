@@ -22,12 +22,13 @@ export default {
     isPending: false,
   }),
   methods: {
-    createProduct(product) {
+    createProduct(product, file) {
       this.isPending = true;
       this.$store
         .dispatch("product/createProduct", {
-          product,
           companyId: this.$route.params.companyId,
+          product,
+          file,
         })
         .then(() => {
           this.isPending = false;
