@@ -6,6 +6,7 @@ import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import "nprogress/nprogress.css";
 import "./plugins/vuetoast";
+import "./filters/filters";
 
 import PageContainer from "./components/PageContainer.vue"
 

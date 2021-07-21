@@ -9,7 +9,7 @@
       class="elevation-1"
     >
       <template v-slot:item.actions="{ item }">
-      <v-menu offset-y>
+        <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="ma-2" v-bind="attrs" v-on="on" icon>
               <v-icon>mdi-dots-vertical</v-icon>
@@ -28,6 +28,7 @@
     </v-data-table>
     <div class="mt-10"></div>
      <Dialog
+
       :title="dialogTitle"
       :content="dialogContent"
       :isShowDialog="isShowDialog"
@@ -39,9 +40,9 @@
   </div>
 </template>
 <script>
-import Dialog from "@/dialogs/views/Dialog.vue";
+import Dialog from "@/components/dialogs/views/ConFirmDialog.vue";
 export default {
-   components: {
+  components: {
     Dialog,
   },
   props: {
@@ -56,7 +57,7 @@ export default {
         { text: "Address", value: "address" },
         { text: "Currency", value: "currency" },
         { text: "Image Name", value: "imageName" },
-         { text: "Actions", value: "actions", sortable: false },
+        { text: "Actions", value: "actions", sortable: false },
       ],
       isShowDialog: false,
       dialogTitle: "",
@@ -65,7 +66,7 @@ export default {
   },
 
   methods: {
-     confirmDeleteCompany() {
+    confirmDeleteCompany() {
       this.dialogTitle = `Confirm company deletion`;
       this.dialogContent = `Deleting a company will remove all data related to the company in the system and the data cannot be retrieved later. Are you sure you want to delete company?`;
       this.isShowDialog = true;
@@ -74,9 +75,9 @@ export default {
       this.isShowDialog = value;
     },
     deleteCompany(companyId) {
-      this.$emit("delete-company", companyId)
-    }
-  }
+      this.$emit("delete-company", companyId);
+    },
+  },
 };
 </script>
 

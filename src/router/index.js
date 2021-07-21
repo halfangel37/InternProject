@@ -8,57 +8,53 @@ Vue.use(VueRouter);
 
 // TODO separate the routers to individual module
 
-const routes = [{
+const routes = [
+  {
     path: "/auth",
     name: "AuthPage",
-    component: () => import ("../views/AuthPage.vue"),
-    children: [{
+    component: () => import("../views/AuthPage.vue"),
+    children: [
+      {
         path: "signup",
         name: "Signup",
-        component: () =>
-          import ("../register/views/RegisterPage.vue"),
+        component: () => import("../register/views/RegisterPage.vue"),
       },
       {
         path: "signin",
         name: "Signin",
-        component: () =>
-          import ("../signin/views/Signin.vue"),
+        component: () => import("../signin/views/Signin.vue"),
       },
       {
         path: "forgot-password",
         name: "ForgotPassword",
-        component: () =>
-          import ("../forgotPassword/views/ForgotPassword.vue"),
+        component: () => import("../forgotPassword/views/ForgotPassword.vue"),
       },
       {
         path: "reset-password/:key",
         props: true,
         name: "ResetPassword",
-        component: () =>
-          import ("../resetPassword/views/ResetPassword.vue"),
+        component: () => import("../resetPassword/views/ResetPassword.vue"),
       },
     ],
   },
   {
     path: "/",
-    component: () => import ("../layouts/dashboard/DashboardLayout.vue"),
+    component: () => import("../layouts/dashboard/DashboardLayout.vue"),
     meta: { requiresAuth: true },
     beforeEnter(routeTo, routeFrom, next) {
       store
-        .dispatch("profile/getUserProfile",
-          routeTo.params.companyId,
-        )
+        .dispatch("profile/getUserProfile", routeTo.params.companyId)
         // TODO handle error
         .then(() => next());
     },
     children: [
       {
         path: "dashboard",
-        component: () => import ("../Dashboard/views/DashboardPage.vue"),
+        component: () => import("../Dashboard/views/DashboardPage.vue"),
       },
       {
         path: "profile",
-        component: () => import ("../profile/views/Profile.vue"),
+        component: () => import("../profile/views/Profile.vue"),
       },
       {
         path: "companies",
@@ -66,74 +62,103 @@ const routes = [{
         props: true,
         beforeEnter(routeTo, routeFrom, next) {
           store
-            .dispatch("companies/getCompanies",
-              routeTo.params.companyId,
-            )
+            .dispatch("companies/getCompanies", routeTo.params.companyId)
             // TODO handle error
             .then(() => next());
         },
         children: [
           {
             path: "",
-            component: () => import ("../companies/views/ListCompaniesPage.vue")
+            component: () => import("../companies/views/ListCompaniesPage.vue"),
           },
           {
             path: "create",
             name: "RegisterCompany",
             component: () =>
-              import ("../companies/views/RegisterCompanyPage.vue"),
+              import("../companies/views/RegisterCompanyPage.vue"),
           },
           {
             path: ":companyId",
             component: Content,
+            props: true,
             beforeEnter(routeTo, routeFrom, next) {
-              store
-                .dispatch("companies/selectCompany",
-                  routeTo.params.companyId,
-                );
+              store.dispatch(
+                "companies/selectCompany",
+                routeTo.params.companyId
+              );
 
               store
-                .dispatch("companies/getCompanyById",
-                  routeTo.params.companyId,
-                )
+                .dispatch("companies/getCompanyById", routeTo.params.companyId)
                 // TODO handle error
                 .then(() => next());
             },
             children: [
               {
                 path: "setting",
-                component: () => import ("../views/Setting.vue")
+                component: () => import("../views/Setting.vue"),
               },
               {
                 path: "contacts",
-                component: () => import ("../views/Contacts.vue"),
+                component: () => import("../views/Contacts.vue"),
               },
               {
                 path: "products",
-                name: 'products',
-                component: () => import ("../views/Products.vue"),
-              },
-              {
-                path: "products/create",
-                component: () => import ("../product/views/CreateProduct.vue"),
+                name: "products",
+                component: () => import("../views/Products.vue"),
+                children: [
+                  {
+                    path: "",
+                    props: true,
+                    component: () =>
+                      import("../products/views/ProductsDashboard.vue"),
+                    beforeEnter(routeTo, routeFrom, next) {
+                      store
+                        .dispatch("products/getProducts", {
+                          PageNumber: 1,
+                          PageSize: 10,
+                          id: routeTo.params.companyId,
+                        })
+                        .then(() => {
+                          next();
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                        });
+                    },
+                  },
+                  {
+                    path: ":productId",
+                    component: () => import("../views/Sales.vue"),
+                    name: "ProductDetail",
+                    props: true,
+                  },
+                  {
+                    path: "create",
+                    name: "createProduct",
+                    component: () =>
+                      import("../product/views/CreateProduct.vue"),
+                  },
+                ],
               },
               {
                 path: "sales",
-                component: () => import ("../views/Sales.vue"),
+                component: () => import("../views/Sales.vue"),
               },
               {
                 path: "fees",
-                component: () => import ("../views/Fees.vue"),
+                component: () => import("../views/Fees.vue"),
               },
               {
                 path: "employees",
-                component: () => import ("../employees/views/EmployeesDashboard.vue"),
+                component: () =>
+                  import("../employees/views/EmployeesDashboard.vue"),
                 props: true,
                 children: [
                   {
                     path: "",
                     props: true,
-                    component: () => import ("../employees/views/EmployeesDashboard.vue"),
+                    component: () =>
+                      import("../employees/views/EmployeesDashboard.vue"),
                     beforeEnter(routeTo, routeFrom, next) {
                       store
                         .dispatch("employees/getEmployees", {
@@ -143,28 +168,27 @@ const routes = [{
                         })
                         // TODO: handle error
                         .then(() => next());
-                    }
-                }]
+                    },
+                  },
+                ],
               },
               {
                 path: "employees/create",
                 name: "CreateEmployee",
-                component: () => import ("../employees/views/CreateEmployee.vue"),
-              }
-            ]
+                component: () =>
+                  import("../employees/views/CreateEmployee.vue"),
+              },
+            ],
           },
-          
-        ]
+        ],
       },
-    ]
+    ],
   },
   {
     path: "/**",
-    component: () =>
-      import ("../views/NotFound.vue"),
+    component: () => import("../views/NotFound.vue"),
   },
 ];
-
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
@@ -181,6 +205,5 @@ router.beforeEach((routeTo, routeFrom, next) => {
   } else {
     next();
   }
-
 });
 export default router;

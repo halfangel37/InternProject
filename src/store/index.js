@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex, { createLogger } from "vuex";
-
 import register from "@/register/store";
 import profile from "@/profile/store";
 import product from "@/product/store";
@@ -9,8 +8,8 @@ import signout from "@/signout/store";
 import companies from "@/companies/store";
 import employees from "@/employees/store";
 import forgotPassword from "@/forgotPassword/store";
-import resetPassword from "@/resetPassword/store";
-
+import resetPassword  from "@/resetPassword/store";
+import products  from "@/products/store";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -28,6 +27,7 @@ export default new Vuex.Store({
     employees,
     forgotPassword,
     resetPassword,
+    products,
     product
   },
 });
