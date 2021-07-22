@@ -2,11 +2,16 @@ import {
   getProducts,
   updateStatusProduct,
   deleteProduct,
+  getProductById,
+  createProduct,
+  updateProduct,
+  uploadProductImage,
 } from "@/http/products.js";
 import Vue from "vue";
 import NProgress from "nprogress";
 const namespaced = true;
 const state = {
+  product: {},
   products: [],
   totalPages: 0,
 };
@@ -25,11 +30,17 @@ const mutations = {
     const index = state.products.findIndex((p) => p.id === productId);
     state.products.splice(index, 1);
   },
+  SET_PRODUCT(state, product) {
+    state.product = product;
+  },
+  UPDATE_PRODUCT_IMAGE(state, data) {
+    state.product.imageName = data.imageName;
+  },
 };
 const actions = {
   getProducts({ commit }, { id, pageNumber, pageSize }) {
     NProgress.start();
-    return getProducts({ id, pageNumber, pageSize})
+    return getProducts({ id, pageNumber, pageSize })
       .then((response) => {
         commit(
           "SET_TOTAL_PAGES",
@@ -44,7 +55,7 @@ const actions = {
   },
   updateStatusProduct({ commit }, { companyId, productId, productStatus }) {
     NProgress.start();
-    const statusMessage = productStatus == 0 ? "Disable" : "Enable";
+    const statusMessage = productStatus == 1 ? "Disable" : "Enable";
     return updateStatusProduct({ companyId, productId, productStatus })
       .then(() => {
         NProgress.done();
@@ -71,6 +82,43 @@ const actions = {
         Vue.$toast.error(error.response.data.errors[0].message);
       });
   },
+  createProduct(_, { companyId, product, file }) {
+    return createProduct({ companyId, product, file })
+      .then(() => {
+        Vue.$toast.success("Product have been created.");
+      })
+      .catch((error) => {
+        error.response.data.errors.File[0]
+          ? Vue.$toast.success("Product have been created.") &&
+            Vue.$toast.error(error.response.data.errors.File[0])
+          : Vue.$toast.error(error.response.data.errors);
+      });
+  },
+  updateProductImage({ commit }, { companyId, productId, file }) {
+    return uploadProductImage({ companyId, productId, file })
+      .then((response) => {
+        commit("UPDATE_PRODUCT_IMAGE", response.data);
+        Vue.$toast.success("Product Image have been saved.");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors.File[0]);
+      });
+  },
+  getProductById({ commit }, { companyId, productId }) {
+    return getProductById({ companyId, productId }).then((response) => {
+      commit("SET_PRODUCT", response.data);
+    });
+  },
+  updateProduct({ commit }, { companyId, productId, product }) {
+    return updateProduct({ companyId, productId, product })
+      .then((response) => {
+        commit("SET_PRODUCT", response.data);
+        Vue.$toast.success("Product info have been saved.");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors);
+      });
+  },
 };
 const getters = {
   selectAllProducts: (state) => state.products,
@@ -78,5 +126,6 @@ const getters = {
   selectProductById: (state) => (id) => {
     return state.products.find((product) => product.id === id);
   },
+  selectSeletedProduct: (state) => state.product,
 };
 export default { namespaced, state, mutations, actions, getters };

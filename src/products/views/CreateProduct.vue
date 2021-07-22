@@ -25,7 +25,7 @@ export default {
     createProduct(product, file) {
       this.isPending = true;
       this.$store
-        .dispatch("product/createProduct", {
+        .dispatch("products/createProduct", {
           companyId: this.$route.params.companyId,
           product,
           file,

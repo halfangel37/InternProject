@@ -2,7 +2,7 @@
   <div>
     <h1 class="title fs-40">Products</h1>
     <div class="d-flex h-40 j-content-space-between mt-40 header">
-      <CreateButton @onCreate="onCreate"/>
+      <CreateButton @onCreate="onCreate" />
       <div class="w-200">
         <v-select
           dense
@@ -70,9 +70,10 @@ import { mdiMagnify, mdiCogOutline } from "@mdi/js";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import Products from "@/products/components/Products.vue";
-import CreateButton from '@/components/CreateButton.vue';
+import CreateButton from "@/components/CreateButton.vue";
+import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
-  components: { Products,CreateButton },
+  components: { Products, CreateButton },
   props: {
     companyId: String,
   },
@@ -88,8 +89,6 @@ export default {
       searchIcon: mdiMagnify,
       settingIcon: mdiCogOutline,
       search: "",
-      ON_STATUS: 1,
-      OFF_STATUS: 0,
     };
   },
   methods: {
@@ -111,17 +110,12 @@ export default {
     },
     filterStatus(status) {
       this.showAll = status === "Show all" ? true : false;
-      this.statusProduct = status === "Show enabled" ? 1 : 0;
+      this.statusProduct =
+        status === "Show enabled" ? ENABLE_STATUS : DISABLE_STATUS;
     },
     changeStatus({ productId, productStatus }) {
       const status =
-        productStatus === this.ON_STATUS
-          ? 0
-          : productStatus === this.OFF_STATUS
-          ? 1
-          : !productStatus
-          ? 0
-          : 1;
+        productStatus === ENABLE_STATUS ? DISABLE_STATUS : ENABLE_STATUS;
       this.$store.dispatch("products/updateStatusProduct", {
         companyId: this.companyId,
         productId: productId,
@@ -153,10 +147,10 @@ export default {
       if (this.showAll) {
         return this.products;
       }
-      if (this.statusProduct === 0) {
-        return this.products.filter((item) => item.status === 0);
+      if (this.statusProduct === ENABLE_STATUS) {
+        return this.products.filter((item) => item.status === ENABLE_STATUS);
       }
-      return this.products.filter((item) => item.status == 1);
+      return this.products.filter((item) => item.status == DISABLE_STATUS);
     },
   },
 };

@@ -26,7 +26,7 @@ export default {
     isPending: false,
   }),
   created() {
-    this.$store.dispatch("product/getProductById", {
+    this.$store.dispatch("products/getProductById", {
       companyId: this.$route.params.companyId,
       productId: this.$route.params.productId,
     });
@@ -35,7 +35,7 @@ export default {
     updateProduct(product) {
       this.isPending = true;
       this.$store
-        .dispatch("product/updateProduct", {
+        .dispatch("products/updateProduct", {
           companyId: this.$route.params.companyId,
           productId: this.$route.params.productId,
           product,
@@ -45,7 +45,7 @@ export default {
         });
     },
     updateProductImage(file) {
-      this.$store.dispatch("product/updateProductImage", {
+      this.$store.dispatch("products/updateProductImage", {
         companyId: this.$route.params.companyId,
         productId: this.$route.params.productId,
         file,
@@ -55,7 +55,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      product: "product/selectSeletedProduct",
+      product: "products/selectSeletedProduct",
       user: "profile/userGetter",
     }),
   },

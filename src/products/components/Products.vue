@@ -25,6 +25,8 @@
           <v-switch
             v-model="item.status"
             :label="item.status | status"
+            :true-value="ENABLE_STATUS"
+            :false-value="DISABLE_STATUS"
             @click.capture.native.stop="confirmChangeStatus(item)"
             readonly
           >
@@ -51,7 +53,7 @@
           </template>
           <v-list>
             <v-list-item @click="confirmChangeStatus(item)">
-              {{ item.status === 0 ? "Enable" : "Disable" }}
+              {{ item.status === ENABLE_STATUS ? "Disable" : "Enable" }}
             </v-list-item>
             <v-list-item @click="confirmDeleteProduct(item)">
               Delete
@@ -77,6 +79,7 @@
 <script>
 import ConfirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
 import "@/shared/style/style.css";
+import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
   components: {
     ConfirmDialog,
@@ -109,8 +112,8 @@ export default {
       isDialog: false,
       dialogTitle: "",
       dialogContent: "",
-      ON_STATUS: 1,
-      OFF_STATUS: 0,
+      ENABLE_STATUS: ENABLE_STATUS,
+      DISABLE_STATUS: DISABLE_STATUS,
     };
   },
   methods: {
@@ -119,13 +122,7 @@ export default {
     },
     confirmChangeStatus(product) {
       const actionTypeName =
-        product.status === this.ON_STATUS
-          ? "disable"
-          : product.status === this.OFF_STATUS
-          ? "enable"
-          : !product.status
-          ? "enable"
-          : "disable";
+        product.status === ENABLE_STATUS ? "disable" : "enable";
       this.actionType = "changeStatus";
       this.selectedProduct = product;
       this.isDialog = true;

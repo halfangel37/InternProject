@@ -1,11 +1,7 @@
 <template>
-  <v-form @submit.prevent="onSubmit" ref="updateProductForm" class="form">
+  <v-form @submit.prevent="onSubmit" ref="createProductForm" class="form">
     <v-col cols="12" sm="6" md="8" lg="8">
-      <v-img
-        class="avatar"
-        :src="`
-      ${imageUrl}${this.user.id}/companies/${this.$route.params.companyId}/products/${this.product.id}/${this.product.imageName}`"
-      ></v-img>
+      <v-img class="avatar" :src="url"></v-img>
       <v-file-input
         @change="onFileChange"
         v-model="imageFile"
@@ -13,44 +9,46 @@
         prepend-icon="mdi-camera"
         dense
         hide-input
+        validate-on-blur
         class="file-input"
       >
       </v-file-input>
     </v-col>
     <v-switch
-      v-model="productCopy.status"
+      v-model="product.status"
+      flat
       color="success"
       :true-value="0"
       :false-value="1"
       :label="`${productStatusConvert}`"
     ></v-switch>
+    {{ product.status }}
     <v-text-field
-      v-model="productCopy.name"
+      v-model="product.name"
       label="Product Name"
       :rules="nameRules"
       outlined
       dense
       validate-on-blur
     />
-
     <v-select
-      v-model="productCopy.productType"
+      v-model="product.productType"
       outlined
       dense
       :items="productType"
-      item-text="text"
-      item-value="value"
+      label="Product type"
+      :rules="typeRules"
       validate-on-blur
     ></v-select>
 
     <v-row
       class="row"
-      v-for="(productPrices, index) in productCopy.productPrices"
+      v-for="(productPrices, index) in product.productPrices"
       :key="index"
     >
       <v-col class="column" cols="12" sm="4" md="5" lg="5">
         <v-select
-          v-model="productCopy.productPrices[index].currency"
+          v-model="product.productPrices[index].currency"
           outlined
           dense
           :items="currencies"
@@ -61,7 +59,7 @@
       </v-col>
       <v-col class="column" cols="12" sm="4" md="5" lg="5">
         <v-text-field
-          v-model.number="productCopy.productPrices[index].price"
+          v-model.number="product.productPrices[index].price"
           label="Product Price"
           :rules="priceRules"
           outlined
@@ -91,7 +89,7 @@
           color="#4f2566"
           :disabled="isPending"
         >
-          <span v-if="!isPending">Update</span>
+          <span v-if="!isPending">CREATE</span>
           <span v-else>
             <v-progress-circular
               :size="20"
@@ -103,30 +101,27 @@
         </v-btn>
       </v-col>
       <v-col class="column" cols="6">
-        <v-btn @click="cancelUpdate" class="cancel-btn" block>
+        <v-btn @click="cancelCreate" class="cancel-btn" block>
           <span>Cancel</span></v-btn
         >
       </v-col>
     </v-row>
   </v-form>
 </template>
+
 <script>
 import validators from "@/shared/form-validators";
 import { currencyCodes } from "../../companies/currency.js";
-import { imageBaseUrl } from "@/config.js";
-import _ from "lodash";
+
 export default {
   props: {
     isPending: Boolean,
-    product: Object,
-    user: Object,
   },
   data() {
     return {
-      productCopy: "",
-      imageUrl: imageBaseUrl,
-      imageFile: null,
+      imageRules: [validators.mustBeImage("File must be an image")],
       nameRules: [validators.required("Product name is required")],
+      typeRules: [validators.required("Product type is required")],
       priceRules: [
         validators.requiredPositiveNumber("Product price must greater than 0"),
       ],
@@ -137,40 +132,46 @@ export default {
         ),
         validators.required("Currency is required"),
       ],
-      productType: [
-        { text: "Item", value: 0 },
-        { text: "Service", value: 1 },
-      ],
+      url: null,
+      productType: ["Item", "Service"],
+      imageFile: null,
+      product: {
+        productType: "",
+        name: "",
+        status: 0,
+        imageUrl: "",
+        productPrices: [
+          {
+            currency: "",
+            price: null,
+          },
+        ],
+      },
     };
   },
 
-  watch: {
-    product() {
-      this.productCopy = _.cloneDeep(this.product);
-    },
-  },
   methods: {
-    onFileChange() {
-      this.$emit("update-product-image", this.imageFile);
-    },
     onSubmit() {
-      if (this.$refs.updateProductForm.validate()) {
-        this.$emit("update-product", this.productCopy);
+      if (this.$refs.createProductForm.validate()) {
+        this.$emit("create-product", this.product, this.imageFile);
       }
     },
-    cancelUpdate() {
+    onFileChange(e) {
+      this.url = URL.createObjectURL(e);
+    },
+    cancelCreate() {
       this.$router.push({
         path: `/companies/${this.$route.params.companyId}/products`,
       });
     },
     addPrice() {
-      this.productCopy.productPrices.push({
+      this.product.productPrices.push({
         currency: "",
         price: null,
       });
     },
     removePrice(index) {
-      this.productCopy.productPrices.splice(index, 1);
+      this.product.productPrices.splice(index, 1);
     },
   },
 
@@ -179,16 +180,13 @@ export default {
       return currencyCodes.map((item) => item.cc);
     },
     productCurrencies() {
-      const mapCurrencies = this.productCopy.productPrices.map(
+      const mapCurrencies = this.product.productPrices.map(
         (item) => item.currency
       );
       return mapCurrencies;
     },
-    productTypeConvert() {
-      return this.productCopy.productType === 0 ? "Item" : "Service";
-    },
     productStatusConvert() {
-      return this.productCopy.status == 0 ? "Enabled" : "Disabled";
+      return this.product.status == 0 ? "Enabled" : "Disabled";
     },
   },
 };

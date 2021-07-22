@@ -130,14 +130,14 @@ const routes = [
                     path: "create",
                     name: "createProduct",
                     component: () =>
-                      import("../product/views/CreateProduct.vue"),
+                      import("../products/views/CreateProduct.vue"),
                   },
                   {
                     path: ":productId",
                     name: "ProductDetail",
                     props: true,
                     component: () =>
-                      import("../product/views/UpdateProduct.vue"),
+                      import("../products/views/UpdateProduct.vue"),
                   },
                 ],
               },
