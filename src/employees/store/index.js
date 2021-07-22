@@ -3,6 +3,7 @@ import { create } from "@/http/employees";
 import { updateStatusEmployee, getEmployees, deleteEmployee } from "@/http/employees";
 import { STATUS } from "@/http/status-code";
 import NProgress from "nprogress";
+import { DISABLE_STATUS } from "@/shared/variables/index";
 
 export const namespaced = true;
 
@@ -66,6 +67,7 @@ const actions = {
 
   changeStatus({ commit, getters }, { companyId, employeeId, employeeStatus }) {
     const employee = getters.getEmployeeById(employeeId);
+    const statusMessage = employeeStatus == DISABLE_STATUS ? "Disable" : "Enable";
     let payload = [
       {
         value: employeeStatus,
@@ -80,15 +82,7 @@ const actions = {
           employee: employee,
           status: employeeStatus,
         });
-
-        switch (employeeStatus) {
-          case 1:
-            Vue.$toast.success("Enable employee successfully!");
-            break;
-          case 0:
-            Vue.$toast.success("Disable employee successfully!");
-            break;
-        }
+        Vue.$toast.success(statusMessage + " employee successfully");
         NProgress.done();
       })
       .catch(() => {

@@ -1,0 +1,3 @@
+const ENABLE_STATUS = 0;
+const DISABLE_STATUS = 1;
+export { ENABLE_STATUS, DISABLE_STATUS };

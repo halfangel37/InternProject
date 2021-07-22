@@ -64,6 +64,8 @@
         <td class="itemFormat">
           <v-switch
             v-model="item.status"
+            :false-value="DISABLED_STATUS"
+            :true-value="ENABLED_STATUS"
             @click.capture.native.stop="confirmChangeStatus(item)"
             insert
             :label="item.status | status"
@@ -81,9 +83,9 @@
           </template>
           <v-list>
             <v-list-item @click="confirmChangeStatus(item)">
-              {{ item.status === 0 ? "Enable" : "Disable" }}
+              {{ item.status == ENABLED_STATUS ? "Disable" : "Enable" }}
             </v-list-item>
-            <v-list-item @click="confirmDeleteEmployee(item.id)"> 
+            <v-list-item @click="confirmDeleteEmployee(item)"> 
               Delete
             </v-list-item>
           </v-list>
@@ -108,6 +110,7 @@
 <script>
 import confirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
 import "@/shared/style/style.css";
+import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
   components: {
     confirmDialog
@@ -141,8 +144,8 @@ export default {
     isDialog: false,
     dialogTitle: "",
     dialogContent: "",
-    ON_STATUS: 1,
-    OFF_STATUS: 0,
+    ENABLED_STATUS: ENABLE_STATUS,
+    DISABLED_STATUS: DISABLE_STATUS,
   }),
 
   methods: {
@@ -161,9 +164,9 @@ export default {
 
     confirmChangeStatus(employee) {
       const actionTypeName =
-        employee.status === this.ON_STATUS
+        employee.status === this.ENABLED_STATUS
           ? "disable"
-          : employee.status === this.OFF_STATUS
+          : employee.status === this.DISABLED_STATUS
           ? "enable"
           : !employee.status
           ? "enable"
@@ -184,8 +187,8 @@ export default {
       );
     },
 
-    confirmDeleteEmployee(employeeId) {
-      this.selectedEmployee = employeeId;
+    confirmDeleteEmployee(employee) {
+      this.selectedEmployee = employee;
       this.actionTypeName = "delete";
       this.actionType = "deleteEmployee";
       this.isDialog = true
@@ -194,7 +197,7 @@ export default {
     },
 
     deleteEmployee() {
-      this.$emit("delete-employee", {employeeId: this.selectedEmployee})
+      this.$emit("delete-employee", {employeeId: this.selectedEmployee.id})
     },
 
   },

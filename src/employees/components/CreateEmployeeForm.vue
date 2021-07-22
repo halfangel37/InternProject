@@ -103,6 +103,8 @@
           <v-row>
             <v-col cols="12" md="1">
               <v-switch
+              :true-value="ENABLED_STATUS"
+              :false-value="DISABLED_STATUS"
               v-model="employeeInfo.status"
               :label="employeeInfo.status | status"
               ></v-switch>
@@ -124,6 +126,7 @@
 
 <script>
 import validators from "@/shared/form-validators";
+import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
   data() {
     return {
@@ -135,8 +138,10 @@ export default {
         phoneNumber: "",
         address: "",
         birthDate: "",
-        status: false
+        status: DISABLE_STATUS,
       },
+      ENABLED_STATUS: ENABLE_STATUS,
+      DISABLED_STATUS: DISABLE_STATUS,
       formValidity: false,
       firstNameRules: [validators.required("First name is required")],
       lastNameRules: [validators.required("Last name is required")],
