@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-form
+    <v-container>
+     <v-row>
+       <v-col>
+          <v-form
       ref="createEmployeeForm"
       v-model="formValidity"
       @submit.prevent="onSubmit()"
@@ -121,6 +124,9 @@
         >CREATE</v-btn
       >
     </v-form>
+       </v-col>
+     </v-row>
+    </v-container>
   </div>
 </template>
 

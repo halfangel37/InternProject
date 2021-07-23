@@ -150,7 +150,7 @@ export default {
 
   methods: {
     itemRowBackground(item) {
-      return this.employeesDisplay.indexOf(item) % 2 < 1 ? "bg-gray" : "bg-white";
+      return this.employeesDisplay.indexOf(item) % 2 === 0 ? "bg-gray" : "bg-white";
     },
     statusSliderChanged(status) {
       const statusEmployee =

@@ -1,8 +1,10 @@
 <template>
   <div>
     <v-data-table
+      :search="search"
+      :item-class="itemRowBackground"
       :headers="headers"
-      :items="items"
+      :items="companiesDisplay"
       show-select
       hide-default-footer
       disable-pagination
@@ -19,7 +21,7 @@
             <v-list-item @click="editCompany(item)">
               <span>Edit company</span></v-list-item
             >
-            <v-list-item @click="deleteCompany(item.id)">
+            <v-list-item @click="confirmDeleteCompany(item.id)">
               <span style="color: #e12d39"> Delete company</span>
             </v-list-item>
           </v-list>
@@ -27,26 +29,28 @@
       </template>
     </v-data-table>
     <div class="mt-10"></div>
-     <Dialog
-
+   <ConfirmDialog
       :title="dialogTitle"
       :content="dialogContent"
-      :isShowDialog="isShowDialog"
-      @setShowDialog="setShowDialog"
+      :isDialog="isDialog"
+      @on-close="isDialog = false"
       :btnAccept="'OK'"
       :btnNotAccept="'Cancel'"
-      @confirmDeleteCompany="deleteCompany()"
-    ></Dialog>
+      @on-confirm="
+        actionType ===  deleteCompany()
+      "
+    ></ConfirmDialog>
   </div>
 </template>
 <script>
-import Dialog from "@/components/dialogs/views/ConfirmDialog.vue";
+import ConfirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
 export default {
-  components: {
-    Dialog,
+   components: {
+     ConfirmDialog
   },
   props: {
-    items: Array,
+    search: String,
+    companiesDisplay: Array,
   },
   data() {
     return {
@@ -59,25 +63,33 @@ export default {
         { text: "Image Name", value: "imageName" },
         { text: "Actions", value: "actions", sortable: false },
       ],
-      isShowDialog: false,
+      selectedCompany: undefined,
+      isDialog: false,
       dialogTitle: "",
       dialogContent: "",
+      
     };
   },
 
   methods: {
-    confirmDeleteCompany() {
+    itemRowBackground(item) {
+        return this.companiesDisplay.indexOf(item) % 2 === 0 ? "bg-gray" : "bg-white";
+    },
+     confirmDeleteCompany(companyId) {
+      this.actionType ="deleteCompany"
+      this.selectedCompany = companyId;
+      console.log("test",this.selectedCompany)
       this.dialogTitle = `Confirm company deletion`;
       this.dialogContent = `Deleting a company will remove all data related to the company in the system and the data cannot be retrieved later. Are you sure you want to delete company?`;
-      this.isShowDialog = true;
+      this.isDialog = true;
     },
-    setShowDialog(value) {
-      this.isShowDialog = value;
+      onClose() {
+      this.isDialog = false;
     },
-    deleteCompany(companyId) {
-      this.$emit("delete-company", companyId);
-    },
-  },
+    deleteCompany() {
+      this.$emit("delete-company", this.selectedCompany)
+    }
+  }
 };
 </script>
 

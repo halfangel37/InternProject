@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { createLogger} from "vuex";
+import Vuex, { createLogger } from "vuex";
 import register from "@/register/store";
 import profile from "@/profile/store";
 import signin from "@/signin/store";
@@ -24,7 +24,6 @@ export default new Vuex.Store({
     employees,
     forgotPassword,
     resetPassword,
-    product,
     products,
   },
 });

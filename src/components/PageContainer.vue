@@ -10,7 +10,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {};
 </script>
@@ -22,16 +21,40 @@ export default {};
 .page-title {
   font-size: 40px;
   font-weight: 600;
-  margin: 0;
+  color: #36373d;
+  font-style: normal;
+  font-family: sans-serif;
 }
 .page-container {
-  margin-left: 140px;
+  margin-left: 120px;
   margin-right: unset;
+  transition: all 300ms;
 }
-
-@media (min-width: 1200px) {
-  .app-container {
-    max-width: 1140px;
+//query pagecontainer
+@media (min-width:1024px) and (max-width:1500px) { //pc
+  .page-container {
+    max-width: 1040px;
+    margin-left: 40px;
   }
 }
+
+@media (min-width:1500px) { //pc
+  .page-container {
+    max-width: 1040px;
+    margin-left: 160px;
+  }
+}
+
+@media  (min-width:740px)  and (max-width:1023px) { //tablet
+  .page-container {
+    margin-left: 0px;
+  }
+}
+
+@media (max-width:739px) { //mobile
+  .page-container {
+    margin-left:0;
+  }
+}
+
 </style>

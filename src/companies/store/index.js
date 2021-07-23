@@ -23,13 +23,13 @@ const getters = {
 const mutations = {
   SET_ALL_COMPANIES(state, companies) {
     state.companies = companies;
-    if(!state.selectedCompanyId && companies.length > 0){
+    if (!state.selectedCompanyId && companies.length > 0) {
       state.selectedCompanyId = companies[0].id;
     }
   },
   UPSERT_ONE_COMPANY(state, company) {
     const index = state.companies.findIndex(c => c.id === company.id);
-    if(index >= 0) {
+    if (index >= 0) {
       state.companies[index] = company;
     } else {
       state.companies.push(company);
@@ -38,7 +38,7 @@ const mutations = {
   REMOVE_ONE_COMPANY(state, companyId) {
     let companies = state.companies.filter(c => c.id != companyId)
     state.companies = companies;
-    
+
     /**
      * If we delete the selected company,
      * so we should update the selected company to the first company in the list
@@ -53,6 +53,7 @@ const mutations = {
       ...pagination
     };
   },
+
   SET_SELECTED_COMPANY_ID(state, selectedCompanyId) {
     state.selectedCompanyId = parseInt(selectedCompanyId)
   },
@@ -64,14 +65,18 @@ const actions = {
     progress.start();
     const { pageNumber, pageSize } = getters.selectCompanyPaging;
     return getCompanies(pageNumber, pageSize)
-    .then((response) => {
-      const totalPages = parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages);
-      
-      commit("SET_PAGINATION", {totalPages});
-      commit("SET_ALL_COMPANIES", response.data);
+      .then((response) => {
+        commit(
+          "SET_TOTAL_PAGES",
+          parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages)
+        );
+        const totalPages = parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages);
 
-      progress.done();
-    });
+        commit("SET_PAGINATION", { totalPages });
+        commit("SET_ALL_COMPANIES", response.data);
+
+        progress.done();
+      });
   },
 
   deleteCompany({ commit }, companyId) {
@@ -94,12 +99,14 @@ const actions = {
 
   registerCompany(_, companyInfor) {
     return create(companyInfor)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         Vue.$toast.error(error.response.data.errors[0].title);
       });
   },
+  updatePagination({ commit }, pageSize) {
+    commit("SET_PAGINATION", { pageSize });
+  }
 };
 
 export default {

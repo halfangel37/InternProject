@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <v-container>
-      <v-row justify="end" align="baseline">
-        <v-col cols="12" md="1">
+   <PageContainer>
+     <template #page-title>
+     Employee List
+    </template>
+    <template #page-content>
+      <div  class="d-flex align-baseline justify-center justify-space-between">
+   
           <CreateButton  @onCreate="onCreate()"/>
-        </v-col>
 
-        <v-col cols="12" md="2" class="ml-5">
+     
           <v-select
             dense
             :items="status"
@@ -16,12 +18,11 @@
             solo
             :append-icon="'mdi-chevron-down'"
           ></v-select>
-        </v-col>
+     
 
-        <v-col cols="12" md="2">
-          <v-row align="baseline">
-            <v-col>Rows per page:</v-col>
-            <v-col>
+       
+            Rows per page:
+           
               <v-select
                 dense
                 :items="rowsPerPage"
@@ -31,23 +32,21 @@
                 v-on:change="changeRow"
                 :append-icon="'mdi-chevron-down'"
               ></v-select>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="12" md="3"></v-col>
-        <v-col cols="12" md="3">
+         
+        
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
             outlined
+            dense
             hide-details
           >
           </v-text-field>
-        </v-col>
-      </v-row>
-      <v-row justify="end">
-        <v-col cols="12" md="11">
+       
+   
+  </div>
+     <div>
           <EmployeesList
             :employeesDisplay="employeesDisplay"
             :search="search"
@@ -55,7 +54,6 @@
             @click-row="redirectUpdateEmployee"
             @delete-employee="deleteEmployee"
           />
-
           <div class="text-center pt-2">
             <v-pagination
               v-if="totalPages > 1"
@@ -68,19 +66,19 @@
             >
             </v-pagination>
           </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+      </div>
+    </template>
+   </PageContainer>
 </template>
 
 <script>
 import CreateButton from "../../components/CreateButton.vue";
 import { mapGetters } from "vuex";
 import EmployeesList from "../components/EmployeesList.vue";
-
+import PageContainer from "@/components/PageContainer.vue";
 export default {
   components: {
+    PageContainer,
     CreateButton,
     EmployeesList,
   },

@@ -1,36 +1,35 @@
 <template>
   <div>
-    <v-row class="d-flex align-baseline">
-      <span>Row per page:</span>
-      <div class="mr-2"></div>
+    <v-row>
+      <v-col class="d-flex align-baseline">
+        <span>Row per page:</span>
       <v-select
-        :items="items"
-        label="Outlined style"
         dense
         outlined
-        :menu-props="{ top: true, offsetY: true }"
-        @change="changeRowsPerPage"
-        :value="rowsPerPage"
+        :menu-props="{ bot: true, offsetY: true }"
+        :items="rowsPerPage"
+        :value="currentRowsPerPage"
+        @change="changeRow"
       ></v-select>
+      </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    rowsPerPage: Number,
-  },
-  data() {
+   data() {
     return {
-      items: [10, 25, 50, 100],
+      rowsPerPage: [10, 25, 50, 100],
+      currentRowsPerPage: 10,
+      currentPage: 1,
     };
   },
-  methods: {
-    changeRowsPerPage(value) {
-      this.$emit("changeRowsPerPage", value);
-    },
-  },
+  methods:{
+    changeRow(value){
+    this.$emit('change-row',value)
+  }
+  }
 };
 </script>
 

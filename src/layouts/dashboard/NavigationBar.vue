@@ -2,7 +2,7 @@
   <div>
     <div class="header-logo">
       <div class="logo">
-        <div class="logo__design" @click="navigateConpanies()">C</div>
+        <div class="logo__design" @click="navigateCompanies()">C</div>
       </div>
     </div>
     <v-divider></v-divider>
@@ -92,7 +92,7 @@ export default {
         path: `/dashboard`,
       });
     },
-    navigateConpanies() {
+    navigateCompanies() {
       this.$router.push({
         path: `/companies`,
       });

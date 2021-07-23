@@ -32,6 +32,8 @@
           >
             <v-list-item-title>{{ company.name }}</v-list-item-title>
           </v-list-item>
+           <v-divider ></v-divider>
+           <div @click="navigateToCompanieListPage()" class="style-company">Company list</div>
         </v-list>
       </v-menu>
     </v-col>
@@ -107,10 +109,25 @@ export default {
         this.$route.push({ path: "/auth/signin" });
       });
     },
+      navigateToCompanieListPage() {
+      this.$router.push({
+        path: `/companies`,
+      });
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+.style-company{
+    cursor: pointer;
+    color: #2d9cdb;
+    text-align: center;
+    font-weight:600;
+    padding:10px 0px;
+}
+.style-company:hover{
+  background: #f5f5f5;
+}
 .v-btn:not(.v-btn--round).v-size--default {
   min-width: 40px !important;
 }

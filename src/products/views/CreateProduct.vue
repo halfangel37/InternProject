@@ -1,6 +1,9 @@
 <template>
-  <v-main>
-    <h1>Create Product</h1>
+  <PageContainer>
+    <template #page-title>
+      Create Product
+    </template>
+    <template #page-content>
     <v-container class="form-container">
       <v-row>
         <v-col cols="12" sm="10" md="10" lg="10">
@@ -11,13 +14,18 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-main>
+    </template>
+  </PageContainer>
 </template>
 
 <script>
 import CreateProductForm from "../components/CreateProductForm.vue";
+import PageContainer from "@/components/PageContainer.vue";
 export default {
-  components: { CreateProductForm },
+  components: {
+    CreateProductForm,
+    PageContainer
+   },
   data: () => ({
     isPending: false,
   }),

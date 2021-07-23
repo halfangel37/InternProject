@@ -1,7 +1,12 @@
 <template>
-  <div>
-    <h1 class="title fs-40">Products</h1>
-    <div class="d-flex h-40 j-content-space-between mt-40 header">
+ 
+  <PageContainer>
+    <template #page-title>
+     Product List
+    </template>
+    <template #page-content>
+       <div>
+    <div class="d-flex h-40 j-content-space-between header">
       <CreateButton @onCreate="onCreate" />
       <div class="w-200">
         <v-select
@@ -62,6 +67,8 @@
       </v-pagination>
     </div>
   </div>
+    </template>
+  </PageContainer>
 </template>
 
 <script>
@@ -70,10 +77,15 @@ import { mdiMagnify, mdiCogOutline } from "@mdi/js";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import Products from "@/products/components/Products.vue";
+import PageContainer from "@/components/PageContainer.vue";
 import CreateButton from "@/components/CreateButton.vue";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
-  components: { Products, CreateButton },
+  components: { 
+    Products, 
+    CreateButton,
+    PageContainer
+    },
   props: {
     companyId: String,
   },

@@ -68,13 +68,13 @@ const actions = {
   changeStatus({ commit, getters }, { companyId, employeeId, employeeStatus }) {
     const employee = getters.getEmployeeById(employeeId);
     const statusMessage = employeeStatus == DISABLE_STATUS ? "Disable" : "Enable";
-    let payload = [
-      {
-        value: employeeStatus,
-        path: "/status/",
-        op: "replace",
-      },
-    ];
+    const payload = [
+		{
+      value: employeeStatus,
+      path: "/status/",
+      op: "replace",
+		}
+	];
     NProgress.start();
     return updateStatusEmployee(companyId, employeeId, payload)
       .then(() => {
@@ -91,30 +91,30 @@ const actions = {
       });
   },
 
-  deleteEmployee( {commit}, {companyId, employeeId}) {
+  deleteEmployee({ commit }, { companyId, employeeId }) {
     NProgress.start();
     return deleteEmployee(companyId, employeeId)
-    .then(() => {
-      commit("DELETE_EMPLOYEE", employeeId)
-      Vue.$toast.open({
-        message: "Delete employee successfully!",
-        type: "success",
-        duration: 3000,
-        dismissible: true,
-        position: "top-right",
-      });
-      NProgress.done();
-    })
-    .catch((err) => {
-      Vue.$toast.open({
-        message: err,
-        type: "success",
-        duration: 3000,
-        dismissible: true,
-        position: "top-right",
-      });
-    })
-}
+      .then(() => {
+        commit("DELETE_EMPLOYEE", employeeId)
+        Vue.$toast.open({
+          message: "Delete employee successfully!",
+          type: "success",
+          duration: 3000,
+          dismissible: true,
+          position: "top-right",
+        });
+        NProgress.done();
+      })
+      .catch((err) => {
+        Vue.$toast.open({
+          message: err,
+          type: "success",
+          duration: 3000,
+          dismissible: true,
+          position: "top-right",
+        });
+      })
+  }
 };
 
 const getters = {

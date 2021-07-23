@@ -1,5 +1,10 @@
 <template>
-  <v-container>
+  <PageContainer>
+    <template #page-title>
+    Create Company
+    </template>
+    <template #page-content>
+      <v-container>
     <v-row justify="end" class="px-50">
       <v-col cols="12" md="12">
         <v-stepper v-model="nextStep">
@@ -86,10 +91,13 @@
       </v-col>
     </v-row>
   </v-container>
+    </template>
+  </PageContainer>
 </template>
 
 <script>
 import RegisterCompanyForm from "../components/RegisterCompanyForm.vue";
+import PageContainer from "@/components/PageContainer.vue";
 import "@/shared/style/style.css";
 export default {
   data() {
@@ -98,6 +106,7 @@ export default {
     };
   },
   components: {
+    PageContainer,
     RegisterCompanyForm,
   },
   methods: {
