@@ -1,0 +1,18 @@
+tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+  }
+tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+}
+tbody {
+    tr:nth-of-type(odd):hover {
+        background-color: #e5e5e5 !important;
+        transform: scale(1, 1.08);
+        box-shadow: #cccccc 0px 0px 3px 0px;
+    }
+    tr:nth-of-type(even):hover {
+        background-color: white !important;
+        transform: scale(1, 1.08);
+        box-shadow: #cccccc 0px 0px 3px 0px;
+    }
+}

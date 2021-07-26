@@ -19,6 +19,7 @@
 
 <script>
 import UpdateProductForm from "../components/UpdateProductForm.vue";
+import "@/shared/style/style.css";
 import { mapGetters } from "vuex";
 export default {
   components: { UpdateProductForm },
@@ -53,6 +54,11 @@ export default {
     },
   },
 
+  beforeRouteLeave(routeTo, routeFrom, next) {
+    this.$store.dispatch("products/clearStates").then(() => {
+      next();
+    });
+  },
   computed: {
     ...mapGetters({
       product: "products/selectSeletedProduct",

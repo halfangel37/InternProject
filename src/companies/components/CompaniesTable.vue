@@ -2,13 +2,12 @@
   <div>
     <v-data-table
       :search="search"
-      :item-class="itemRowBackground"
       :headers="headers"
       :items="companiesDisplay"
       show-select
       hide-default-footer
       disable-pagination
-      class="elevation-1"
+      class="elevation-1 row-pointer"
     >
       <template v-slot:item.actions="{ item }">
         <v-menu offset-y>
@@ -29,24 +28,24 @@
       </template>
     </v-data-table>
     <div class="mt-10"></div>
-   <ConfirmDialog
+    <ConfirmDialog
       :title="dialogTitle"
       :content="dialogContent"
       :isDialog="isDialog"
       @on-close="isDialog = false"
       :btnAccept="'OK'"
       :btnNotAccept="'Cancel'"
-      @on-confirm="
-        actionType ===  deleteCompany()
-      "
+      @on-confirm="actionType === deleteCompany()"
     ></ConfirmDialog>
   </div>
 </template>
 <script>
 import ConfirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
+import "@/shared/style/style.css";
+import "@/shared/style/style.scss";
 export default {
-   components: {
-     ConfirmDialog
+  components: {
+    ConfirmDialog,
   },
   props: {
     search: String,
@@ -67,29 +66,24 @@ export default {
       isDialog: false,
       dialogTitle: "",
       dialogContent: "",
-      
     };
   },
 
   methods: {
-    itemRowBackground(item) {
-        return this.companiesDisplay.indexOf(item) % 2 === 0 ? "bg-gray" : "bg-white";
-    },
-     confirmDeleteCompany(companyId) {
-      this.actionType ="deleteCompany"
+    confirmDeleteCompany(companyId) {
+      this.actionType = "deleteCompany";
       this.selectedCompany = companyId;
-      console.log("test",this.selectedCompany)
       this.dialogTitle = `Confirm company deletion`;
       this.dialogContent = `Deleting a company will remove all data related to the company in the system and the data cannot be retrieved later. Are you sure you want to delete company?`;
       this.isDialog = true;
     },
-      onClose() {
+    onClose() {
       this.isDialog = false;
     },
     deleteCompany() {
-      this.$emit("delete-company", this.selectedCompany)
-    }
-  }
+      this.$emit("delete-company", this.selectedCompany);
+    },
+  },
 };
 </script>
 

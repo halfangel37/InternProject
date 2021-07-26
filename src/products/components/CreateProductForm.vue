@@ -22,7 +22,6 @@
       :false-value="1"
       :label="`${productStatusConvert}`"
     ></v-switch>
-    {{ product.status }}
     <v-text-field
       v-model="product.name"
       label="Product Name"

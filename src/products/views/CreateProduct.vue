@@ -1,19 +1,17 @@
 <template>
   <PageContainer>
-    <template #page-title>
-      Create Product
-    </template>
+    <template #page-title> Create Product </template>
     <template #page-content>
-    <v-container class="form-container">
-      <v-row>
-        <v-col cols="12" sm="10" md="10" lg="10">
-          <CreateProductForm
-            :isPending="isPending"
-            @create-product="createProduct"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
+      <v-container class="form-container">
+        <v-row>
+          <v-col cols="12" sm="10" md="10" lg="10">
+            <CreateProductForm
+              :isPending="isPending"
+              @create-product="createProduct"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
     </template>
   </PageContainer>
 </template>
@@ -24,8 +22,8 @@ import PageContainer from "@/components/PageContainer.vue";
 export default {
   components: {
     CreateProductForm,
-    PageContainer
-   },
+    PageContainer,
+  },
   data: () => ({
     isPending: false,
   }),

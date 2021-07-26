@@ -3,14 +3,15 @@
     <v-data-table
       :headers="headers"
       :items="products"
-      class="mt-10"
-      :item-class="itemRowBackground"
+      class="mt-10 row-pointer"
       item-key="productNumber"
       disable-pagination
       hide-default-footer
       :search="search"
       dense
       @click:row="navigateProduct"
+      show-select
+      sort-by="productPrices"
     >
       <template v-slot:[`item.productNumber`]="{ item }"
         ><td>{{ item.productNumber }}</td>
@@ -79,6 +80,7 @@
 <script>
 import ConfirmDialog from "@/components/dialogs/views/ConfirmDialog.vue";
 import "@/shared/style/style.css";
+import "@/shared/style/style.scss";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
   components: {
@@ -92,18 +94,18 @@ export default {
     return {
       headers: [
         {
-          text: "NUMBER",
+          text: "PRODUCT NUMBER",
           align: "start",
           sortable: true,
           value: "productNumber",
-          width: "15%",
+          width: "16%",
         },
-        { text: "NAME", value: "name", sortable: false },
-        { text: "STATUS", value: "status", sortable: false, width: "15%" },
+        { text: "NAME", value: "name", sortable: true },
+        { text: "STATUS", value: "status", sortable: true, width: "15%" },
         {
           text: "PRICE",
           value: "productPrices",
-          sortable: false,
+          sortable: true,
           width: "20%",
         },
         { text: "", value: "actions", sortable: false, width: "5%" },
@@ -117,9 +119,6 @@ export default {
     };
   },
   methods: {
-    itemRowBackground(item) {
-      return this.products.indexOf(item) % 2 < 1 ? "bg-gray" : "bg-white";
-    },
     confirmChangeStatus(product) {
       const actionTypeName =
         product.status === ENABLE_STATUS ? "disable" : "enable";
@@ -138,8 +137,8 @@ export default {
     confirmDeleteProduct(product) {
       this.selectedProduct = product;
       this.actionType = "deleteProduct";
-      this.dialogTitle = 'Confirm delete selected product!';
-      this.dialogContent = 'Are you sure you want to delete selected product!';
+      this.dialogTitle = "Confirm delete selected product!";
+      this.dialogContent = "Are you sure you want to delete selected product!";
       this.isDialog = true;
     },
     deleteProduct() {
@@ -157,5 +156,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 </style>

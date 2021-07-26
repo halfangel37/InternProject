@@ -11,7 +11,7 @@ import Vue from "vue";
 import NProgress from "nprogress";
 const namespaced = true;
 const state = {
-  product: {},
+  product: undefined,
   products: [],
   totalPages: 0,
 };
@@ -35,6 +35,11 @@ const mutations = {
   },
   UPDATE_PRODUCT_IMAGE(state, data) {
     state.product.imageName = data.imageName;
+  },
+  CLEAR_STATES(state) {
+    state.product = undefined;
+    state.products = [];
+    state.totalPages = 0;
   },
 };
 const actions = {
@@ -118,6 +123,9 @@ const actions = {
       .catch((error) => {
         Vue.$toast.error(error.response.data.errors);
       });
+  },
+  clearStates({ commit }) {
+    commit("CLEAR_STATES");
   },
 };
 const getters = {

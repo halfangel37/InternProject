@@ -9,6 +9,7 @@ import employees from "@/employees/store";
 import forgotPassword from "@/forgotPassword/store";
 import resetPassword from "@/resetPassword/store";
 import products from "@/products/store";
+import contacts from "@/contacts/store";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -25,5 +26,6 @@ export default new Vuex.Store({
     forgotPassword,
     resetPassword,
     products,
+    contacts,
   },
 });

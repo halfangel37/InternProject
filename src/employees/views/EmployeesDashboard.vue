@@ -1,74 +1,65 @@
 <template>
-   <PageContainer>
-     <template #page-title>
-     Employee List
-    </template>
+  <PageContainer>
+    <template #page-title> Employee List </template>
     <template #page-content>
-      <div  class="d-flex align-baseline justify-center justify-space-between">
-   
-          <CreateButton  @onCreate="onCreate()"/>
+      <div class="d-flex align-baseline justify-center justify-space-between">
+        <CreateButton @onCreate="onCreate()" />
 
-     
-          <v-select
-            dense
-            :items="status"
-            :value="currentStatus"
-            v-on:change="filterStatus"
-            label="Select"
-            solo
-            :append-icon="'mdi-chevron-down'"
-          ></v-select>
-     
+        <v-select
+          dense
+          :items="status"
+          :value="currentStatus"
+          v-on:change="filterStatus"
+          label="Select"
+          solo
+          :append-icon="'mdi-chevron-down'"
+        ></v-select>
 
-       
-            Rows per page:
-           
-              <v-select
-                dense
-                :items="rowsPerPage"
-                :value="currentRowsPerPage"
-                label="Select"
-                solo
-                v-on:change="changeRow"
-                :append-icon="'mdi-chevron-down'"
-              ></v-select>
-         
-        
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            outlined
-            dense
-            hide-details
+        Rows per page:
+
+        <v-select
+          dense
+          :items="rowsPerPage"
+          :value="currentRowsPerPage"
+          label="Select"
+          solo
+          v-on:change="changeRow"
+          :append-icon="'mdi-chevron-down'"
+        ></v-select>
+
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          outlined
+          dense
+          hide-details
+        >
+        </v-text-field>
+      </div>
+      <div>
+        <EmployeesList
+          :employeesDisplay="employeesDisplay"
+          :search="search"
+          @change-status="changeStatus"
+          @click-row="redirectUpdateEmployee"
+          @delete-employee="deleteEmployee"
+        />
+        <div class="text-center pt-2">
+          <v-pagination
+            v-if="totalPages > 1"
+            circle
+            @input="next"
+            previous="prePage"
+            :total-visible="5"
+            v-model="currentPage"
+            :length="totalPages"
           >
-          </v-text-field>
-       
-   
-  </div>
-     <div>
-          <EmployeesList
-            :employeesDisplay="employeesDisplay"
-            :search="search"
-            @change-status="changeStatus"
-            @click-row="redirectUpdateEmployee"
-            @delete-employee="deleteEmployee"
-          />
-          <div class="text-center pt-2">
-            <v-pagination
-              v-if="totalPages > 1"
-              circle
-              @input="next"
-              previous="prePage"
-              :total-visible="5"
-              v-model="currentPage"
-              :length="totalPages"
-            >
-            </v-pagination>
-          </div>
+          </v-pagination>
+        </div>
       </div>
     </template>
-   </PageContainer>
+  </PageContainer>
 </template>
 
 <script>
@@ -134,7 +125,7 @@ export default {
       this.statusEmployee = status === "Show enabled" ? 1 : 0;
     },
 
-    changeStatus({employeeId, employeeStatus}) {
+    changeStatus({ employeeId, employeeStatus }) {
       this.$store.dispatch("employees/changeStatus", {
         companyId: this.$route.params.companyId,
         employeeId: employeeId,
@@ -146,17 +137,21 @@ export default {
       this.$router.push({ path: `employees/${employee.id}` });
     },
 
-    deleteEmployee({employeeId}) {
+    deleteEmployee({ employeeId }) {
       this.$store.dispatch("employees/deleteEmployee", {
         companyId: this.$route.params.companyId,
-        employeeId: employeeId
-      })
+        employeeId: employeeId,
+      });
     },
     onCreate() {
       this.$router.push({ name: "CreateEmployee" });
-    }
+    },
+  },
+  beforeRouteLeave(routeTo, routeFrom, next) {
+    this.$store.dispatch("employees/clearStates").then(() => {
+      next();
+    });
   },
 };
-
 </script>
 <style lang="scss" scoped></style>

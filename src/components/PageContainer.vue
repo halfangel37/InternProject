@@ -15,9 +15,6 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-.page-header {
-  padding: 3rem 0;
-}
 .page-title {
   font-size: 40px;
   font-weight: 600;
@@ -30,7 +27,6 @@ export default {};
   margin-right: unset;
   transition: all 300ms;
 }
-//query pagecontainer
 @media (min-width:1024px) and (max-width:1500px) { //pc
   .page-container {
     max-width: 1040px;
@@ -56,5 +52,4 @@ export default {};
     margin-left:0;
   }
 }
-
 </style>

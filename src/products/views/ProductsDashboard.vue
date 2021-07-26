@@ -1,72 +1,69 @@
 <template>
- 
   <PageContainer>
-    <template #page-title>
-     Product List
-    </template>
+    <template #page-title> Products </template>
     <template #page-content>
-       <div>
-    <div class="d-flex h-40 j-content-space-between header">
-      <CreateButton @onCreate="onCreate" />
-      <div class="w-200">
-        <v-select
-          dense
-          :items="status"
-          :value="currentStatus"
-          v-on:change="filterStatus"
-          label="Select"
-          solo
-          :append-icon="'mdi-chevron-down'"
-        ></v-select>
-      </div>
-      <span class="d-flex a-items-center mr-5"
-        ><v-icon class="color-light-orange">{{ settingIcon }}</v-icon></span
-      >
-      <div class="d-flex">
-        <span class="d-flex a-items-center mr-5">Rows per page:</span>
-        <div class="w-100">
-          <v-select
-            dense
-            :items="rowsPerPage"
-            :value="currentRowsPerPage"
-            label="Select"
-            solo
-            v-on:change="changeRow"
-            :append-icon="'mdi-chevron-down'"
-          ></v-select>
+      <div>
+        <div class="d-flex h-40 j-content-space-between header mt-40">
+          <CreateButton @onCreate="onCreate" />
+          <div class="w-200">
+            <v-select
+              dense
+              :items="status"
+              :value="currentStatus"
+              v-on:change="filterStatus"
+              label="Select"
+              solo
+              :append-icon="'mdi-chevron-down'"
+            ></v-select>
+          </div>
+          <span class="d-flex a-items-center mr-5"
+            ><v-icon class="color-light-orange">{{ settingIcon }}</v-icon></span
+          >
+          <div class="d-flex">
+            <span class="d-flex a-items-center mr-5">Rows per page:</span>
+            <div class="w-100">
+              <v-select
+                dense
+                :items="rowsPerPage"
+                :value="currentRowsPerPage"
+                label="Select"
+                solo
+                v-on:change="changeRow"
+                :append-icon="'mdi-chevron-down'"
+              ></v-select>
+            </div>
+          </div>
+          <div>
+            <v-text-field
+              dense
+              outlined
+              label="Search"
+              v-model="search"
+              :append-icon="searchIcon"
+            >
+            </v-text-field>
+          </div>
+        </div>
+        <Products
+          :products="productsDisplay"
+          :search="search"
+          @changeStatus="changeStatus"
+          @navigateProduct="navigateProduct"
+          @deleteProduct="deleteProduct"
+        />
+        <div class="mt-5">
+          <v-pagination
+            circle
+            @input="next"
+            previous="prePage"
+            :total-visible="5"
+            v-model="currentPage"
+            :length="totalPages"
+            v-if="totalPages > 1"
+          >
+          </v-pagination>
         </div>
       </div>
-      <div>
-        <v-text-field
-          dense
-          outlined
-          label="Search"
-          v-model="search"
-          :append-icon="searchIcon"
-        >
-        </v-text-field>
-      </div>
-    </div>
-    <Products
-      :products="productsDisplay"
-      :search="search"
-      @changeStatus="changeStatus"
-      @navigateProduct="navigateProduct"
-      @deleteProduct="deleteProduct"
-    />
-    <div class="mt-5">
-      <v-pagination
-        circle
-        @input="next"
-        previous="prePage"
-        :total-visible="5"
-        v-model="currentPage"
-        :length="totalPages"
-        v-if="totalPages > 1"
-      >
-      </v-pagination>
-    </div>
-  </div>
     </template>
   </PageContainer>
 </template>
@@ -81,11 +78,11 @@ import PageContainer from "@/components/PageContainer.vue";
 import CreateButton from "@/components/CreateButton.vue";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
-  components: { 
-    Products, 
+  components: {
+    Products,
     CreateButton,
-    PageContainer
-    },
+    PageContainer,
+  },
   props: {
     companyId: String,
   },
@@ -103,6 +100,7 @@ export default {
       search: "",
     };
   },
+
   methods: {
     changeRow(rowsPerPage) {
       this.currentRowsPerPage = rowsPerPage;
@@ -135,7 +133,6 @@ export default {
       });
     },
     deleteProduct({ productId }) {
-      debugger;
       this.$store.dispatch("products/deleteProduct", {
         companyId: this.companyId,
         productId: productId,
@@ -165,20 +162,20 @@ export default {
       return this.products.filter((item) => item.status == DISABLE_STATUS);
     },
   },
+
+  beforeRouteLeave(routeTo, routeFrom, next) {
+    this.$store.dispatch("products/clearStates").then(() => {
+      next();
+    });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.color-light-orange {
-  color: #df7f01;
-}
 .w-100 {
   width: 100px;
 }
-.max-width {
-  max-width: 200px;
-}
-.fs-40 {
-  font-size: 40px !important;
+.color-light-orange {
+  color: #df7f01;
 }
 </style>

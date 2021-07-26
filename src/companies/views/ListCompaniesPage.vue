@@ -4,17 +4,17 @@
     <template #page-content>
       <div class="d-flex justify-space-between align-baseline">
         <CreateButton @onCreate="onCreate()" />
-       <div class="mr-2"></div>
+        <div class="mr-2"></div>
         <ShowCompanies />
-         <div class="mr-2"></div>
+        <div class="mr-2"></div>
         <FilterCompanies />
-          <div class="mr-2"></div>
+        <div class="mr-2"></div>
         <RowsPerPage
           :items="rowsPerPage"
           :value="currentRowsPerPage"
           @change-row="changeRow"
         />
-          <div class="mr-2"></div>
+        <div class="mr-2"></div>
         <v-text-field
           flat
           solo
@@ -27,7 +27,6 @@
           dense
         >
         </v-text-field>
-       
       </div>
       <div>
         <CompaniesTable

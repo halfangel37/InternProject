@@ -1,7 +1,12 @@
 import Vue from "vue";
 import progress from "nprogress";
 
-import { create, getCompanies, getCompanyById, deleteCompanies } from "@/http/companies";
+import {
+  create,
+  getCompanies,
+  getCompanyById,
+  deleteCompanies,
+} from "@/http/companies";
 
 const state = {
   companies: [],
@@ -9,7 +14,7 @@ const state = {
   pagination: {
     pageNumber: 1,
     totalPages: 0,
-    pageSize: 10
+    pageSize: 10,
   },
 };
 
@@ -17,7 +22,8 @@ const getters = {
   selectAllCompanies: (state) => state.companies,
   selectCompanyPaging: (state) => state.pagination,
   selectSelectedCompanyId: (state) => state.selectedCompanyId,
-  selectSelectedCompany: (state) => state.companies.find((c) => c.id === state.selectedCompanyId),
+  selectSelectedCompany: (state) =>
+    state.companies.find((c) => c.id === state.selectedCompanyId),
 };
 
 const mutations = {
@@ -28,7 +34,7 @@ const mutations = {
     }
   },
   UPSERT_ONE_COMPANY(state, company) {
-    const index = state.companies.findIndex(c => c.id === company.id);
+    const index = state.companies.findIndex((c) => c.id === company.id);
     if (index >= 0) {
       state.companies[index] = company;
     } else {
@@ -36,7 +42,7 @@ const mutations = {
     }
   },
   REMOVE_ONE_COMPANY(state, companyId) {
-    let companies = state.companies.filter(c => c.id != companyId)
+    let companies = state.companies.filter((c) => c.id != companyId);
     state.companies = companies;
 
     /**
@@ -50,12 +56,12 @@ const mutations = {
   SET_PAGINATION(state, pagination) {
     state.pagination = {
       ...state.pagination,
-      ...pagination
+      ...pagination,
     };
   },
 
   SET_SELECTED_COMPANY_ID(state, selectedCompanyId) {
-    state.selectedCompanyId = parseInt(selectedCompanyId)
+    state.selectedCompanyId = parseInt(selectedCompanyId);
   },
 };
 
@@ -64,19 +70,20 @@ const actions = {
   getCompanies({ commit, getters }) {
     progress.start();
     const { pageNumber, pageSize } = getters.selectCompanyPaging;
-    return getCompanies(pageNumber, pageSize)
-      .then((response) => {
-        commit(
-          "SET_TOTAL_PAGES",
-          parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages)
-        );
-        const totalPages = parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages);
+    return getCompanies(pageNumber, pageSize).then((response) => {
+      commit(
+        "SET_TOTAL_PAGES",
+        parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages)
+      );
+      const totalPages = parseInt(
+        JSON.parse(response.headers["x-pagination"]).TotalPages
+      );
 
-        commit("SET_PAGINATION", { totalPages });
-        commit("SET_ALL_COMPANIES", response.data);
+      commit("SET_PAGINATION", { totalPages });
+      commit("SET_ALL_COMPANIES", response.data);
 
-        progress.done();
-      });
+      progress.done();
+    });
   },
 
   deleteCompany({ commit }, companyId) {
@@ -84,7 +91,7 @@ const actions = {
     return deleteCompanies(companyId).then(() => {
       progress.done();
       commit("REMOVE_ONE_COMPANY", companyId);
-    })
+    });
   },
 
   selectCompany({ commit }, companyId) {
@@ -106,7 +113,7 @@ const actions = {
   },
   updatePagination({ commit }, pageSize) {
     commit("SET_PAGINATION", { pageSize });
-  }
+  },
 };
 
 export default {
@@ -114,5 +121,5 @@ export default {
   actions,
   state,
   getters,
-  mutations
-}
+  mutations,
+};

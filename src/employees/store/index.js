@@ -1,6 +1,10 @@
 import Vue from "vue";
 import { create } from "@/http/employees";
-import { updateStatusEmployee, getEmployees, deleteEmployee } from "@/http/employees";
+import {
+  updateStatusEmployee,
+  getEmployees,
+  deleteEmployee,
+} from "@/http/employees";
 import { STATUS } from "@/http/status-code";
 import NProgress from "nprogress";
 import { DISABLE_STATUS } from "@/shared/variables/index";
@@ -27,9 +31,12 @@ const mutations = {
   },
 
   DELETE_EMPLOYEE(state, employeeId) {
-    state.employees = state.employees.filter(e => e.id != employeeId)
+    state.employees = state.employees.filter((e) => e.id != employeeId);
   },
-
+  CLEAR_STATES(state) {
+    state.totalPages = 0;
+    state.employees = [];
+  },
 };
 
 const actions = {
@@ -67,14 +74,15 @@ const actions = {
 
   changeStatus({ commit, getters }, { companyId, employeeId, employeeStatus }) {
     const employee = getters.getEmployeeById(employeeId);
-    const statusMessage = employeeStatus == DISABLE_STATUS ? "Disable" : "Enable";
+    const statusMessage =
+      employeeStatus == DISABLE_STATUS ? "Disable" : "Enable";
     const payload = [
-		{
-      value: employeeStatus,
-      path: "/status/",
-      op: "replace",
-		}
-	];
+      {
+        value: employeeStatus,
+        path: "/status/",
+        op: "replace",
+      },
+    ];
     NProgress.start();
     return updateStatusEmployee(companyId, employeeId, payload)
       .then(() => {
@@ -95,7 +103,7 @@ const actions = {
     NProgress.start();
     return deleteEmployee(companyId, employeeId)
       .then(() => {
-        commit("DELETE_EMPLOYEE", employeeId)
+        commit("DELETE_EMPLOYEE", employeeId);
         Vue.$toast.open({
           message: "Delete employee successfully!",
           type: "success",
@@ -113,8 +121,11 @@ const actions = {
           dismissible: true,
           position: "top-right",
         });
-      })
-  }
+      });
+  },
+  clearStates({ commit }) {
+    commit("CLEAR_STATES");
+  },
 };
 
 const getters = {
