@@ -18,5 +18,16 @@ const updateStatusEmployee = (companyId, employeeId, payload) =>
 const deleteEmployee = (companyId, employeeId) => 
   httpClient.delete(`${COMPANY}/${companyId}${EMPLOYEE}/${employeeId}`)
 
+const updateEmployee = ({ companyId, employeeId, employee }) => {
+  return httpClient.put(
+    `${COMPANY}/${companyId}${EMPLOYEE}/${employeeId}`,
+    employee
+  );
+};
 
-export { create, getEmployees, updateStatusEmployee, deleteEmployee }
+const getEmployeeById = ({ companyId, employeeId }) => {
+  return httpClient.get(`${COMPANY}/${companyId}${EMPLOYEE}/${employeeId}`);
+};
+
+
+export { create, getEmployees, updateStatusEmployee, deleteEmployee, updateEmployee, getEmployeeById }

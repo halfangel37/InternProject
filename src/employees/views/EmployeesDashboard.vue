@@ -2,42 +2,47 @@
   <PageContainer>
     <template #page-title> Employee List </template>
     <template #page-content>
-      <div class="d-flex align-baseline justify-center justify-space-between">
-        <CreateButton @onCreate="onCreate()" />
-
-        <v-select
-          dense
-          :items="status"
-          :value="currentStatus"
-          v-on:change="filterStatus"
-          label="Select"
-          solo
-          :append-icon="'mdi-chevron-down'"
-        ></v-select>
-
-        Rows per page:
-
-        <v-select
-          dense
-          :items="rowsPerPage"
-          :value="currentRowsPerPage"
-          label="Select"
-          solo
-          v-on:change="changeRow"
-          :append-icon="'mdi-chevron-down'"
-        ></v-select>
-
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          outlined
-          dense
-          hide-details
-        >
-        </v-text-field>
-      </div>
       <div>
+        <div class="d-flex h-40 j-content-space-between header mb-10 mt-10">
+          <CreateButton @onCreate="onCreate()" />
+          <div class="w-200">
+            <v-select
+              dense
+              :items="status"
+              :value="currentStatus"
+              v-on:change="filterStatus"
+              label="Select"
+              solo
+              :append-icon="'mdi-chevron-down'"
+            ></v-select>
+          </div>
+
+          <div class="d-flex">
+            <span class="d-flex a-items-center mr-5">Rows per page:</span>
+            <div class="w-100">
+              <v-select
+                dense
+                :items="rowsPerPage"
+                :value="currentRowsPerPage"
+                label="Select"
+                solo
+                v-on:change="changeRow"
+                :append-icon="'mdi-chevron-down'"
+              ></v-select>
+            </div>
+          </div>
+          <div>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              outlined
+              dense
+              hide-details
+            >
+            </v-text-field>
+          </div>
+        </div>
         <EmployeesList
           :employeesDisplay="employeesDisplay"
           :search="search"
@@ -45,7 +50,7 @@
           @click-row="redirectUpdateEmployee"
           @delete-employee="deleteEmployee"
         />
-        <div class="text-center pt-2">
+        <div class="mt-5">
           <v-pagination
             v-if="totalPages > 1"
             circle
@@ -63,9 +68,11 @@
 </template>
 
 <script>
+import "@/shared/style/style.css";
 import CreateButton from "../../components/CreateButton.vue";
 import { mapGetters } from "vuex";
 import EmployeesList from "../components/EmployeesList.vue";
+import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 import PageContainer from "@/components/PageContainer.vue";
 export default {
   components: {
@@ -95,9 +102,10 @@ export default {
     employeesDisplay: function () {
       if (this.showAll) {
         return this.employees;
-      } else if (this.statusEmployee === 0) {
-        return this.employees.filter((item) => item.status === 0);
-      } else return this.employees.filter((item) => item.status == 1);
+      } else if (this.statusEmployee == ENABLE_STATUS) {
+        return this.employees.filter((item) => item.status == ENABLE_STATUS);
+      } else
+        return this.employees.filter((item) => item.status == DISABLE_STATUS);
     },
   },
 
@@ -122,7 +130,8 @@ export default {
 
     filterStatus(status) {
       this.showAll = status === "Show all" ? true : false;
-      this.statusEmployee = status === "Show enabled" ? 1 : 0;
+      this.statusEmployee =
+        status === "Show enabled" ? ENABLE_STATUS : DISABLE_STATUS;
     },
 
     changeStatus({ employeeId, employeeStatus }) {

@@ -1,18 +1,18 @@
 <template>
   <PageContainer>
     <template #page-title>Create new employee </template>
-
     <template #page-content>
-      <CreateEmployeeForm @submit="onCreateEmployee" />
+      <EmployeeForm @create-employee="onCreateEmployee" class="mt-10"/>
     </template>
   </PageContainer>
 </template>
 
 <script>
-import CreateEmployeeForm from "../components/CreateEmployeeForm.vue";
+import EmployeeForm from "../components/EmployeeForm.vue";
+import "@/shared/style/style.css";
 export default {
   components: {
-    CreateEmployeeForm,
+    EmployeeForm,
   },
   methods: {
     onCreateEmployee(employee) {

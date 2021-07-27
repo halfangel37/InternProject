@@ -68,6 +68,7 @@
             insert
             :label="item.status | status"
             color="success"
+            readonly
           ></v-switch>
         </td>
       </template>
@@ -130,12 +131,11 @@ export default {
         align: "start",
         value: "status",
       },
-      { text: "Employee number", value: "employeeNumber" },
+      { text: "Number", value: "employeeNumber" },
       { text: "Name", value: "name" },
       { text: "Email", value: "email" },
       { text: "Phone number", value: "phoneNumber" },
       { text: "Address", value: "address" },
-      { text: "Birth date", value: "birthDate" },
       { text: "", value: "actions", sortable: false },
     ],
 
@@ -153,20 +153,13 @@ export default {
         status === 1 ? 0 : status === 0 ? 1 : !status ? 0 : 1;
       return statusEmployee;
     },
-
     redirectUpdateEmployee(employee) {
       this.$emit("click-row", employee);
     },
 
     confirmChangeStatus(employee) {
       const actionTypeName =
-        employee.status === this.ENABLED_STATUS
-          ? "disable"
-          : employee.status === this.DISABLED_STATUS
-          ? "enable"
-          : !employee.status
-          ? "enable"
-          : "disable";
+        employee.status === this.ENABLED_STATUS ? "disable" : "enable";
       this.actionType = "changeStatus";
       this.selectedEmployee = employee;
       this.isDialog = true;
@@ -203,5 +196,8 @@ export default {
 <style>
 .redColor {
   color: red;
+}
+tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }
 </style>

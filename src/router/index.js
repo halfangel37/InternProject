@@ -170,10 +170,9 @@ const routes = [
               },
               {
                 path: "employees",
-                name: "EmployeeList",
+                name: "Employees",
                 component: () =>
-                  import("../employees/views/EmployeesDashboard.vue"),
-                props: true,
+                  import("../views/Employees.vue"),
                 children: [
                   {
                     path: "",
@@ -187,21 +186,45 @@ const routes = [
                           PageSize: 10,
                           companyId: routeTo.params.companyId,
                         })
-                        // TODO: handle error
-                        .then(() => next());
+                        .then(() => {
+                          next();
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                        });
                     },
                   },
+                  {
+                    path: "create",
+                    name: "CreateEmployee",
+                    component: () =>
+                      import("../employees/views/CreateEmployee.vue"),
+                  },
+                  {
+                    path: ":employeeId",
+                    name: "EmployeeDetail",
+                    props: true,
+                    component: () =>
+                      import("../employees/views/UpdateEmployee.vue"),
+                    beforeEnter(routeTo, routeFrom, next) {
+                      store
+                        .dispatch("employees/getEmployeeById", {
+                          companyId: routeTo.params.companyId,
+                          employeeId: routeTo.params.employeeId,
+                        })
+                        .then(() => {
+                          next();
+                        })
+                        .catch(() => {
+                          next();
+                        });
+                    },
+                  }
                 ],
-              },
-              {
-                path: "employees/create",
-                name: "CreateEmployee",
-                component: () =>
-                  import("../employees/views/CreateEmployee.vue"),
               },
             ],
           },
-        ],
+        ]
       },
     ],
   },

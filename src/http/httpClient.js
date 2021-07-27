@@ -6,7 +6,7 @@ import {
 } from "./interceptor";
 
 export const httpClient = axios.create({
-  baseURL: `http://intern-2021.southeastasia.cloudapp.azure.com:4000/api/v1`,
+  baseURL: `http://intern-2021.eztek-testing.com:4000/api/v1`,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

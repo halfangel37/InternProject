@@ -4,6 +4,8 @@ import {
   updateStatusEmployee,
   getEmployees,
   deleteEmployee,
+  getEmployeeById,
+  updateEmployee,
 } from "@/http/employees";
 import { STATUS } from "@/http/status-code";
 import NProgress from "nprogress";
@@ -14,6 +16,7 @@ export const namespaced = true;
 const state = {
   employees: [],
   totalPages: 0,
+  employee: undefined,
 };
 
 const mutations = {
@@ -36,6 +39,10 @@ const mutations = {
   CLEAR_STATES(state) {
     state.totalPages = 0;
     state.employees = [];
+  },
+
+  SET_EMPLOYEE(state, employee) {
+    state.employee = employee;
   },
 };
 
@@ -70,6 +77,12 @@ const actions = {
       .catch(() => {
         NProgress.done();
       });
+  },
+
+  getEmployeeById({ commit }, { companyId, employeeId }) {
+    return getEmployeeById({ companyId, employeeId }).then((res) => {
+      commit("SET_EMPLOYEE", res.data);
+    });
   },
 
   changeStatus({ commit, getters }, { companyId, employeeId, employeeStatus }) {
@@ -116,13 +129,25 @@ const actions = {
       .catch((err) => {
         Vue.$toast.open({
           message: err,
-          type: "success",
+          type: "error",
           duration: 3000,
           dismissible: true,
           position: "top-right",
         });
       });
   },
+
+  updateEmployee({ commit }, { companyId, employeeId, employee }) {
+    return updateEmployee({ companyId, employeeId, employee })
+      .then((response) => {
+        commit("SET_EMPLOYEE", response.data);
+        Vue.$toast.success("Employee is updated");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors);
+      });
+  },
+
   clearStates({ commit }) {
     commit("CLEAR_STATES");
   },
@@ -134,6 +159,7 @@ const getters = {
   getEmployeeById: (state) => (id) => {
     return state.employees.find((employee) => employee.id === id);
   },
+  selectSeletedEmployee: (state) => state.employee,
 };
 
 export default {
