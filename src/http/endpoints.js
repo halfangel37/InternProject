@@ -12,4 +12,5 @@ export const COMPANY_ENDPOINT = "/companies";
 export const PRODUCTS = "/products";
 export const IMAGE = "/image";
 export const DELETE_COMPANY_ENDPOINT = "/companies";
+export const BANK_ACCOUNTS="/bank-accounts"
 export const CONTACTS = "/contacts";

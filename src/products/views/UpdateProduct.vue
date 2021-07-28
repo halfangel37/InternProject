@@ -1,20 +1,22 @@
 <template>
-  <v-main>
-    <h1>Update Product</h1>
-    <v-container class="form-container">
-      <v-row>
-        <v-col cols="12" sm="10" md="10" lg="10">
-          <UpdateProductForm
-            :isPending="isPending"
-            :product="product"
-            :user="user"
-            @update-product="updateProduct"
-            @update-product-image="updateProductImage"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+  <PageContainer>
+    <template #page-title> Update Product </template>
+    <template #page-content>
+      <v-container class="form-container">
+        <v-row>
+          <v-col cols="12" sm="10" md="10" lg="10">
+            <UpdateProductForm
+              :isPending="isPending"
+              :product="product"
+              :user="user"
+              @update-product="updateProduct"
+              @update-product-image="updateProductImage"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+  </PageContainer>
 </template>
 
 <script>
@@ -69,10 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  color: #4f2566;
-  margin-bottom: 3rem;
-}
+
 .form-container {
   padding: 0;
 }

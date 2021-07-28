@@ -57,6 +57,6 @@ export default {
   },
   getters: {
     changePasswordMessageGetter: (state) => state.changePasswordMessage,
-    userGetter: (state) => ({...state.user }),
+    userGetter: (state) => state.user,
   },
 };

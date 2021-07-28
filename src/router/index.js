@@ -95,8 +95,25 @@ const routes = [
             children: [
               {
                 path: "setting",
-                component: () => import("../views/Setting.vue"),
+                props: true,
+                component: () =>
+                  import("../companySettings/views/CompanySettings.vue"),
+                beforeEnter(routeTo, routeFrom, next) {
+                  store
+                    .dispatch("companySettings/getBankAccounts", {
+                      PageNumber: 1,
+                      PageSize: 10,
+                      companyId: routeTo.params.companyId,
+                    })
+                    .then(() => {
+                      next();
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                },
               },
+
               {
                 path: "contacts",
                 component: () => import("../views/Contacts.vue"),

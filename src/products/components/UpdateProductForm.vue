@@ -1,5 +1,10 @@
 <template>
-  <v-form @submit.prevent="onSubmit" ref="updateProductForm" class="form">
+  <v-form
+    v-if="productCopy"
+    @submit.prevent="onSubmit"
+    ref="updateProductForm"
+    class="form"
+  >
     <v-col cols="12" sm="6" md="8" lg="8">
       <v-img
         class="avatar"
@@ -124,7 +129,7 @@ export default {
   },
   data() {
     return {
-      productCopy: "",
+      productCopy: undefined,
       imageUrl: imageBaseUrl,
       imageFile: null,
       nameRules: [validators.required("Product name is required")],
@@ -150,6 +155,7 @@ export default {
       this.productCopy = _.cloneDeep(this.product);
     },
   },
+
   methods: {
     onFileChange() {
       this.$emit("update-product-image", this.imageFile);

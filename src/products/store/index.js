@@ -131,9 +131,6 @@ const actions = {
 const getters = {
   selectAllProducts: (state) => state.products,
   selectTotalPage: (state) => state.totalPages,
-  selectProductById: (state) => (id) => {
-    return state.products.find((product) => product.id === id);
-  },
   selectSeletedProduct: (state) => state.product,
 };
 export default { namespaced, state, mutations, actions, getters };

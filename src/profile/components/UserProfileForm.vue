@@ -1,5 +1,10 @@
 <template>
-  <v-form @submit.prevent="onSubmit" ref="userProfileForm" class="form">
+  <v-form
+    v-if="profileCopy"
+    @submit.prevent="onSubmit"
+    ref="userProfileForm"
+    class="form"
+  >
     <v-col cols="12" sm="6" md="8" lg="8">
       <v-img
         class="avatar"
@@ -16,12 +21,13 @@
       >
       </v-file-input>
     </v-col>
+
     <v-text-field
       label="First Name"
       outlined
       dense
       :rules="nameRules"
-      v-model="user.firstName"
+      v-model="profileCopy.firstName"
       validate-on-blur
     />
     <v-text-field
@@ -29,7 +35,7 @@
       outlined
       dense
       :rules="nameRules"
-      v-model="user.lastName"
+      v-model="profileCopy.lastName"
       validate-on-blur
     />
 
@@ -56,6 +62,7 @@
 <script>
 import validators from "@/shared/form-validators";
 import { imageBaseUrl } from "@/config.js";
+import _ from "lodash";
 export default {
   props: {
     user: Object,
@@ -63,10 +70,17 @@ export default {
   },
   data() {
     return {
+      profileCopy: undefined,
       imageUrl: imageBaseUrl,
       nameRules: [validators.required("Name is required")],
       imageFile: null,
     };
+  },
+
+  watch: {
+    user() {
+      this.profileCopy = _.cloneDeep(this.user);
+    },
   },
   methods: {
     onFileChange() {
@@ -76,7 +90,7 @@ export default {
     },
     onSubmit() {
       if (this.$refs.userProfileForm.validate()) {
-        this.$emit("update-profile", this.user);
+        this.$emit("update-profile", this.profileCopy);
       }
     },
   },

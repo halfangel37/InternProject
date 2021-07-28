@@ -54,7 +54,9 @@ export default {
     items: ["Profile", "Account", "Password", "Devices"],
     isButtonDisabled: false,
   }),
-
+ created() {
+    this.$store.dispatch("profile/getUserProfile");
+  },
   methods: {
     changePassword({ oldPassword, newPassword }) {
       this.isButtonDisabled = true;

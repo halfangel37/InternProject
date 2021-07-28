@@ -45,10 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  color: #4f2566;
-  margin-bottom: 3rem;
-}
+
 .form-container {
   padding: 0;
 }
