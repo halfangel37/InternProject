@@ -44,6 +44,39 @@
             </v-text-field>
           </div>
         </div>
+
+        <div class="d-flex justify-end mt-5">
+          <div>
+            <v-btn
+              outlined
+              color="#72418b"
+              :loading="isSelecting"
+              @click="openFolder"
+              :disabled="isPending"
+            >
+              <span v-if="!isPending">IMPORT</span>
+              <span v-else>
+                <v-progress-circular
+                  :size="20"
+                  width="3"
+                  color="purple"
+                  indeterminate
+                ></v-progress-circular
+              ></span>
+            </v-btn>
+            <input
+              ref="uploader"
+              class="d-none"
+              type="file"
+              @change="importFile"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            />
+          </div>
+          <v-btn color="#72418b" dark class="ml-2" depressed @click="exportFile"
+            >Export</v-btn
+          >
+        </div>
+
         <Products
           :products="productsDisplay"
           :search="search"
@@ -88,6 +121,9 @@ export default {
   },
   data() {
     return {
+      isPending: false,
+      isSelecting: false,
+      selectedFileProduct: null,
       status: ["Show all", "Show enabled", "Show disabled"],
       rowsPerPage: [10, 20, 50, 100],
       currentRowsPerPage: 10,
@@ -105,24 +141,31 @@ export default {
     changeRow(rowsPerPage) {
       this.currentRowsPerPage = rowsPerPage;
       this.currentPage = 1;
-      store.dispatch("products/getProducts", {
-        pageNumber: this.currentPage,
+      store.dispatch("products/setPagination", {
         pageSize: this.currentRowsPerPage,
+        pageNumber: 1,
+      });
+      store.dispatch("products/getProducts", {
         id: this.companyId,
       });
     },
+
     next() {
-      store.dispatch("products/getProducts", {
-        pageNumber: this.currentPage,
+      store.dispatch("products/setPagination", {
         pageSize: this.currentRowsPerPage,
+        pageNumber: this.currentPage,
+      });
+      store.dispatch("products/getProducts", {
         id: this.companyId,
       });
     },
+
     filterStatus(status) {
       this.showAll = status === "Show all" ? true : false;
       this.statusProduct =
         status === "Show enabled" ? ENABLE_STATUS : DISABLE_STATUS;
     },
+
     changeStatus({ productId, productStatus }) {
       const status =
         productStatus === ENABLE_STATUS ? DISABLE_STATUS : ENABLE_STATUS;
@@ -132,25 +175,50 @@ export default {
         productStatus: status,
       });
     },
+
     deleteProduct({ productId }) {
       this.$store.dispatch("products/deleteProduct", {
         companyId: this.companyId,
         productId: productId,
       });
     },
+
     navigateProduct(product) {
       this.$router.push({
         path: `products/${product.id}`,
       });
     },
+
     onCreate() {
       this.$router.push({ name: "createProduct" });
+    },
+
+    importFile(e) {
+      this.isPending = true;
+      this.selectedFileProduct = e.target.files[0];
+      this.$store.dispatch("products/importFileProduct", {
+        companyId: this.companyId,
+        fileProducts: this.selectedFileProduct,
+      })
+      .then(() => {
+          this.isPending = false;
+      });
+    },
+
+    exportFile() {
+      this.$store.dispatch("products/exportFileProduct", {
+        companyId: this.companyId,
+      });
+    },
+
+    openFolder() {
+      this.$refs.uploader.click();
     },
   },
   computed: {
     ...mapGetters({
       products: "products/selectAllProducts",
-      totalPages: "products/selectTotalPage",
+      totalPages: "products/selectTotalPages",
     }),
     productsDisplay: function () {
       if (this.showAll) {

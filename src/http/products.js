@@ -49,6 +49,18 @@ const getProductById = ({ companyId, productId }) => {
 const deleteProduct = ({ companyId, productId }) => {
   return httpClient.delete(`${COMPANY}/${companyId}${PRODUCTS}/${productId}`);
 };
+
+const importFileProduct = ({ companyId, fileProducts }) => {
+  const formData = new FormData();
+  formData.append("CSVFile", fileProducts);
+  return httpClient.post(
+    `${COMPANY}/${companyId}${PRODUCTS}/import`,
+    formData
+  );
+};
+const exportFileProduct = (companyId) => {
+  return httpClient.post(`${COMPANY}/${companyId}${PRODUCTS}/export`);
+}
 export {
   getProducts,
   updateStatusProduct,
@@ -57,4 +69,6 @@ export {
   createProduct,
   uploadProductImage,
   updateProduct,
+  importFileProduct,
+  exportFileProduct
 };

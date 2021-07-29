@@ -6,6 +6,8 @@ import {
   createProduct,
   updateProduct,
   uploadProductImage,
+  importFileProduct,
+  exportFileProduct
 } from "@/http/products.js";
 import Vue from "vue";
 import NProgress from "nprogress";
@@ -13,11 +15,24 @@ const namespaced = true;
 const state = {
   product: undefined,
   products: [],
-  totalPages: 0,
+  pagination: {
+    pageNumber: 1,
+    totalPages: 0,
+    pageSize: 10,
+  },
 };
 const mutations = {
+  SET_PAGINATION(state, pagination) {
+    state.pagination = {
+      ...state.pagination,
+      ...pagination,
+    };
+  },
   SET_PRODUCTS(state, data) {
     state.products = data;
+  },
+  SET_IMPORT_PRODUCTS(state, fileProducts) {
+    state.products = [...state.products, ...fileProducts]
   },
   SET_TOTAL_PAGES(state, totalPages) {
     state.totalPages = totalPages;
@@ -43,20 +58,25 @@ const mutations = {
   },
 };
 const actions = {
-  getProducts({ commit }, { id, pageNumber, pageSize }) {
+  getProducts({ commit, getters }, { id }) {
     NProgress.start();
+    const { pageNumber, pageSize } = getters.selectProductsPaging;
     return getProducts({ id, pageNumber, pageSize })
       .then((response) => {
-        commit(
-          "SET_TOTAL_PAGES",
-          parseInt(JSON.parse(response.headers["x-pagination"]).TotalPages)
+        const totalPages = parseInt(
+          JSON.parse(response.headers["x-pagination"]).TotalPages
         );
+        commit("SET_PAGINATION", { totalPages });
         commit("SET_PRODUCTS", response.data);
         NProgress.done();
       })
       .catch(() => {
         NProgress.done();
       });
+  },
+
+  setPagination({ commit }, { pageSize, pageNumber }) {
+    commit("SET_PAGINATION", { pageNumber, pageSize });
   },
   updateStatusProduct({ commit }, { companyId, productId, productStatus }) {
     NProgress.start();
@@ -127,10 +147,41 @@ const actions = {
   clearStates({ commit }) {
     commit("CLEAR_STATES");
   },
+  importFileProduct({dispatch}, { companyId, fileProducts }) {
+    NProgress.start();
+    return importFileProduct({ companyId, fileProducts })
+      .then(() => {
+        Vue.$toast.success("Import file products successfully!");
+        NProgress.done();
+        dispatch("getProducts", {
+          id: companyId,
+        });
+      })
+      .catch((err) => {
+        Vue.$toast.error(err.response.data.errors);
+        NProgress.done();
+      })
+  },
+  exportFileProduct(commit, {companyId}) {
+    return exportFileProduct(companyId)
+    .then(() => {
+      Vue.$toast.open({
+        message: "Products file has been sent to your email!",
+        type: "success",
+        duration: 8000,
+        dismissible: true,
+        position: "top-right",
+      });
+    })
+    .catch((err) => {
+      Vue.$toast.error(err.response.data.errors);
+    })
+  }
 };
 const getters = {
   selectAllProducts: (state) => state.products,
-  selectTotalPage: (state) => state.totalPages,
+  selectTotalPages: (state) => state.pagination.totalPages,
   selectSeletedProduct: (state) => state.product,
+  selectProductsPaging: (state) => state.pagination,
 };
 export default { namespaced, state, mutations, actions, getters };

@@ -111,6 +111,15 @@
         <div>
           <v-btn
             outlined
+            color="#F44336"
+            @click="confirmDeleteEmployee(employeeCopy.id)"
+            v-if="employeeCopy.id"
+            >DELETE</v-btn
+          >
+        </div>
+        <div>
+          <v-btn
+            outlined
             color="#72418b"
             @click="cancelUpdateEmployee()"
             class="mr-5"
@@ -120,13 +129,6 @@
             employeeCopy.id ? "SAVE" : "CREATE"
           }}</v-btn>
         </div>
-        <v-btn
-          outlined
-          color="#F44336"
-          @click="confirmDeleteEmployee(employeeCopy.id)"
-          v-if="employeeCopy.id"
-          >DELETE</v-btn
-        >
       </div>
 
       <confirmDialog

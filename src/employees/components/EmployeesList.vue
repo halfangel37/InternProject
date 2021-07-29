@@ -67,7 +67,6 @@
             @click.capture.native.stop="confirmChangeStatus(item)"
             insert
             :label="item.status | status"
-            color="success"
             readonly
           ></v-switch>
         </td>
