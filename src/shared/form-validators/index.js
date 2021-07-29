@@ -1,5 +1,5 @@
 const EMAIL_REGEX =
-  /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const SPACE_REGEX = /[ ]/;
 
@@ -9,7 +9,7 @@ const email = (message) => (value) => {
 };
 
 const required = (message) => (value) => {
-  return (value && value.length > 0) || message;
+  return (value && value.length > 0) || Number.isInteger(value) || message;
 };
 const requiredPositiveNumber = (message) => (value) => {
   return (value && value > 0) || message;
@@ -48,6 +48,11 @@ const mustNotExistTwice = (errorMessage, notExistTwice) => (value) => {
   return filteredValues.length < 2 || errorMessage;
 };
 
+const NUMBER_REGEX = /^[0-9]+$/;
+const number = (message) => (value) => {
+  return NUMBER_REGEX.test(value) || message;
+};
+
 export default {
   email,
   required,
@@ -59,4 +64,5 @@ export default {
   mustBeImage,
   mustNotExistTwice,
   requiredPositiveNumber,
+  number,
 };

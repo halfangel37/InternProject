@@ -232,6 +232,7 @@ export default {
   height: 8rem;
   background: #f5f5f5;
   border-radius: 4px;
+  border: 2px dashed #d8d8d8;
 }
 .file-input {
   margin-left: 3.3rem;

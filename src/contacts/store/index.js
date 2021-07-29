@@ -2,14 +2,17 @@ import {
   getContacts,
   updateContactStatus,
   deleteContact,
+  getContactById,
+  createContact,
 } from "@/http/contacts.js";
 import Vue from "vue";
 import NProgress from "nprogress";
-
+import router from "@/router";
 const namespaced = true;
 
 const state = {
   contacts: [],
+  contact: undefined,
   pagination: {
     pageNumber: 1,
     totalPages: 0,
@@ -46,6 +49,9 @@ const mutations = {
       totalPages: 0,
       pageSize: 10,
     };
+  },
+  UPSERT_ONE_CONTACT(state, contact) {
+    state.contact = contact;
   },
 };
 
@@ -111,8 +117,22 @@ const actions = {
   clearStates({ commit }) {
     commit("CLEAR_STATES");
   },
+  getContactById({ commit }, companyId) {
+    return getContactById({ companyId }).then((response) => {
+      commit("UPSERT_ONE_CONTACT", response.data);
+    });
+  },
+  createContact(commit, { companyId, contact }) {
+    return createContact({ companyId, contact })
+      .then(() => {
+        Vue.$toast.success("Creating contact was successfully!");
+        router.push({ name: "ContactDasboard" });
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors[0].message);
+      });
+  },
 };
-
 const getters = {
   selectAllContacts: (state) => state.contacts,
   selectTotalPages: (state) => state.pagination.totalPages,

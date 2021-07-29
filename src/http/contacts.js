@@ -28,4 +28,17 @@ const deleteContact = ({ companyId, contactId }) => {
   return httpClient.delete(`${COMPANY}/${companyId}${CONTACTS}/${contactId}`);
 };
 
-export { getContacts, updateContactStatus, deleteContact };
+const getContactById = ({ companyId, contactId }) => {
+  return httpClient.get(`${COMPANY}/${companyId}${CONTACTS}/${contactId}`);
+};
+
+const createContact = ({ companyId, contact }) =>
+  httpClient.post(`${COMPANY}/${companyId}${CONTACTS}`, contact);
+
+export {
+  getContacts,
+  updateContactStatus,
+  deleteContact,
+  getContactById,
+  createContact,
+};

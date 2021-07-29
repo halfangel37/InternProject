@@ -142,6 +142,7 @@ const routes = [
                   {
                     path: "",
                     component: () => import("../contacts/views/Contacts.vue"),
+                    name: "ContactDasboard",
                     props: true,
                     beforeEnter(routeTo, routeFrom, next) {
                       store
@@ -155,6 +156,13 @@ const routes = [
                           console.log(error);
                         });
                     },
+                  },
+                  {
+                    path: "create",
+                    name: "createContact",
+                    props: true,
+                    component: () =>
+                      import("../contacts/views/CreateContact.vue"),
                   },
                 ],
               },
@@ -209,8 +217,7 @@ const routes = [
               {
                 path: "employees",
                 name: "Employees",
-                component: () =>
-                  import("../views/Employees.vue"),
+                component: () => import("../views/Employees.vue"),
                 children: [
                   {
                     path: "",
@@ -257,12 +264,12 @@ const routes = [
                           next();
                         });
                     },
-                  }
+                  },
                 ],
               },
             ],
           },
-        ]
+        ],
       },
     ],
   },

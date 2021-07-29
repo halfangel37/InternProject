@@ -31,6 +31,9 @@
   .pd-20 {
     padding: 20px;
   }
+  .pd-10{
+    padding: 10px;
+  }
   .fs-12 {
     font-size: 12px;
   }
@@ -52,8 +55,20 @@
   .mr-5{
     margin-right: 5px;
   }
+  .mr-3{
+    margin-right: 3px;
+  }
   .mb-10 {
     margin-bottom: 10px;
+  }
+  .mb-30{
+    margin-bottom: 30px;
+  }
+  .mb-40{
+    margin-bottom: 40px;
+  }
+  .mr-10{
+    margin-right: 10px;
   }
   .d-flex {
     display: flex;
@@ -84,6 +99,9 @@
   }
   .w-100 {
     width: 100px;
+  }
+  .w-190{
+    width: 190px;
   }
   .j-content-space-between {
     justify-content: space-between;
