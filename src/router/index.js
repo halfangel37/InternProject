@@ -57,6 +57,20 @@ const routes = [
         component: () => import("../profile/views/Profile.vue"),
       },
       {
+        path: "/",
+        component: () =>
+          import ("../companies/views/ListCompaniesPage.vue"),
+          beforeEnter(routeTo, routeFrom, next) {
+            store
+              .dispatch("companies/getCompanies", {
+                pageNumber: 1,
+                pageSize: 10,
+              })
+              // TODO handle error
+              .then(() => next());
+          },
+      },
+      {
         path: "companies",
         component: Content,
         props: true,
@@ -76,6 +90,13 @@ const routes = [
             name: "RegisterCompany",
             component: () =>
               import("../companies/views/RegisterCompanyPage.vue"),
+          },
+          {
+            path: ":companyId/setting/general",
+            // name: "ProductDetail",
+            props: true,
+            component: () =>
+              import ("../companies/views/UpdateCompany.vue"),
           },
           {
             path: ":companyId",

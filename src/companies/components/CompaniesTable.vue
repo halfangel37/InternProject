@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-data-table
+      @click:row="navigateCompanySetting"
       :search="search"
       :headers="headers"
       :items="companiesDisplay"
@@ -17,7 +18,7 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item @click="editCompany(item)">
+            <v-list-item @click="navigateCompanySetting(item)">
               <span>Edit company</span></v-list-item
             >
             <v-list-item @click="confirmDeleteCompany(item.id)">
@@ -59,7 +60,6 @@ export default {
         { text: "Website", value: "website" },
         { text: "Address", value: "address" },
         { text: "Currency", value: "currency" },
-        { text: "Image Name", value: "imageName" },
         { text: "Actions", value: "actions", sortable: false },
       ],
       selectedCompany: undefined,
@@ -83,7 +83,10 @@ export default {
     deleteCompany() {
       this.$emit("delete-company", this.selectedCompany);
     },
-  },
+     navigateCompanySetting(company) {
+      this.$emit("navigate-company-setting",company);
+    }
+  }
 };
 </script>
 

@@ -18,4 +18,13 @@ const getCompanyById = (companyId) => {
 const deleteCompanies = (companyId) => {
   return httpClient.delete(`${DELETE_COMPANY_ENDPOINT}/${companyId}`);
 }
-export { getCompanies, getCompanyById, deleteCompanies };
+
+const getCompanyId = (companyId) => {
+  return httpClient.get(`${COMPANY_ENDPOINT}/${companyId}`);
+};
+
+const updateCompany = ({ companyId,company }) => {
+  return httpClient.put(`${COMPANY_ENDPOINT}/${companyId}`,company);
+  
+};
+export { getCompanies, getCompanyById, deleteCompanies, updateCompany ,getCompanyId };

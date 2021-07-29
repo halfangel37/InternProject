@@ -93,8 +93,11 @@ export default {
       });
     },
     navigateCompanies() {
-      this.$router.push({
-        path: `/companies`,
+      this.$store.dispatch("companies/getCompanies",{
+        pageNumber: this.currentPage,
+        pageSize: this.currentRowsPerPage,
+      }).then(() => {
+        this.$router.push({ path: `/companies` });
       });
     },
   },

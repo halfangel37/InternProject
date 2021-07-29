@@ -30,12 +30,13 @@
       </div>
       <div>
         <CompaniesTable
+         @navigate-company-setting="navigateCompanySetting"
           :search="search"
           :companiesDisplay="companies"
           @delete-company="deleteCompany"
         />
         <v-pagination
-          v-if="totalPages > 1"
+          v-if="pagination.totalPages > 1"
           circle
           @input="next"
           previous="prePage"
@@ -88,24 +89,33 @@ export default {
       store.dispatch("companies/getCompanies");
     },
     next() {
-      store.dispatch("companies/getCompanies", {
+      store.dispatch("companies/updatePage", {
         pageNumber: this.currentPage,
         pageSize: this.currentRowsPerPage,
       });
-    },
-    mounted() {
-      this.$store.dispatch("companies/getCompanies", {
-        pageNumber: 1,
-        pageSize: 10,
+       store.dispatch("companies/getCompanies", {
+        pageNumber: this.currentPage,
+        pageSize: this.currentRowsPerPage,
       });
     },
     deleteCompany(companyId) {
       this.$store.dispatch("companies/deleteCompany", companyId);
     },
+     navigateCompanySetting(company) {
+      this.$router.push({
+        path: `companies/${company.id}/setting`,
+      });
+    },
     onCreate() {
       this.$router.push({ name: "RegisterCompany" });
     },
   },
+   created() {
+      this.$store.dispatch("companies/getCompanies", {
+         pageNumber: this.currentPage,
+        pageSize: this.currentRowsPerPage,
+      });
+    },
 };
 </script>
 <style lang="scss" scoped></style>

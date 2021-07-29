@@ -53,45 +53,42 @@
                   </v-card>
                   <v-divider></v-divider>
                 </v-stepper-content>
+                
+            <v-stepper-content step="2">
+              <p class="fs-40 py-40">Register a test company</p>
+              <p class="fs-20">
+                Please fill out the below to set up your company profile.<br />
+                The name and organization number will be auto-generated.
+              </p>
+              <RegisterCompanyForm @register-company="register" @prev-step="cancelCreateCompany"/>
+            </v-stepper-content>
 
-                <v-stepper-content step="2">
-                  <p class="fs-40 py-40">Register a test company</p>
-                  <p class="fs-20">
-                    Please fill out the below to set up your company profile.<br />
-                    The name and organization number will be auto-generated.
-                  </p>
-                  <RegisterCompanyForm
-                    @register-company="register"
-                    @prev-step="cancelCreateCompany"
-                  />
-                </v-stepper-content>
+            <v-stepper-content step="3">
+              <p class="fs-40 py-40">Company created successfully</p>
+              <p class="mb-12 fs-20">
+                discreet desk is registered successfully and ready to be used.
+                Click here if you want to go to
+                <a href="" style="text-decoration: none">discreet desk</a>
+              </p>
 
-                <v-stepper-content step="3">
-                  <p class="fs-40 py-40">Company created successfully</p>
-                  <p class="mb-12 fs-20">
-                    discreet desk is registered successfully and ready to be
-                    used. Click here if you want to go to
-                    <a href="" style="text-decoration: none">discreet desk</a>
-                  </p>
-
-                  <v-btn
-                    color="#72418b"
-                    dark
-                    class="mr-5"
-                    x-large
-                    to="/companies"
-                  >
-                    COMPANY LIST
-                  </v-btn>
-                  <v-btn color="#f2b334" dark x-large @click="nextStep = 1">
-                    CREATE NEW COMPANY
-                  </v-btn>
-                </v-stepper-content>
-              </v-stepper-items>
-            </v-stepper>
-          </v-col>
-        </v-row>
-      </v-container>
+              <v-btn
+                color="#72418b"
+                dark
+                class="mr-5"
+                x-large
+                 @click="navigateToCompanieListPage()"
+              >
+                COMPANY LIST
+              </v-btn>
+              <v-btn color="#f2b334" dark x-large @click="nextStep = 1">
+                CREATE NEW COMPANY
+              </v-btn>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-col>
+    </v-row>
+  </v-container>
     </template>
   </PageContainer>
 </template>
@@ -117,6 +114,9 @@ export default {
     },
     cancelCreateCompany() {
       this.nextStep = 1;
+    },
+      navigateToCompanieListPage() {
+        this.$router.push({ path: `/companies` });
     },
   },
 };

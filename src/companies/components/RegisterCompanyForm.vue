@@ -86,7 +86,6 @@ export default {
       if (this.$refs.createCompanyForm.validate()) {
         this.$emit("register-company", this.companyInfo);
       }
-  
     },
     validate() {
       this.$refs.createCompanyForm.validate();

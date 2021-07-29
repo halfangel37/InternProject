@@ -100,7 +100,8 @@ export default {
   },
   methods: {
     selectCompany(companyId) {
-      this.$store.dispatch("companies/selectCompany", companyId).then(() => {
+        this.$store.dispatch("companies/getCompanyId",companyId)
+        this.$store.dispatch("companies/selectCompany",companyId).then(() => {
         this.$router.push({ path: `/companies/${companyId}/setting` });
       });
     },
@@ -110,8 +111,11 @@ export default {
       });
     },
       navigateToCompanieListPage() {
-      this.$router.push({
-        path: `/companies`,
+      this.$store.dispatch("companies/getCompanies",{
+        pageNumber: this.currentPage,
+        pageSize: this.currentRowsPerPage,
+      }).then(() => {
+        this.$router.push({ path: `/companies` });
       });
     },
   },

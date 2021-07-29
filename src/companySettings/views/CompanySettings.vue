@@ -17,6 +17,22 @@
         <v-tabs-items
           class="tabs-items"
           v-model="tab"
+          :class="{ active: tab === 0 }"
+        >
+          <v-tab-item v-for="item in items" :key="item">
+         <v-col cols="12" sm="10" md="10" lg="10">
+          <UpdateCompanyForm
+            :isPending="isPending"
+            :company="company"
+            @update-company="updateCompany"
+          />
+        </v-col>
+          </v-tab-item>
+        </v-tabs-items>
+
+        <v-tabs-items
+          class="tabs-items"
+          v-model="tab"
           :class="{ active: tab === 1 }"
         >
           <v-tab-item v-for="item in items" :key="item">
@@ -84,6 +100,8 @@
             </div>
           </v-tab-item>
         </v-tabs-items>
+
+        
       </div>
     </template>
   </PageContainer>
@@ -96,11 +114,13 @@ import { mapGetters } from "vuex";
 import store from "@/store";
 import BankAccountsList from "@/companySettings/components/BankAccountsList.vue";
 import PageContainer from "@/components/PageContainer.vue";
+import UpdateCompanyForm from "@/companySettings/components/UpdateCompanyForm.vue"
 import CreateButton from "@/components/CreateButton.vue";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
   components: {
     BankAccountsList,
+    UpdateCompanyForm,
     CreateButton,
     PageContainer,
   },
@@ -108,7 +128,10 @@ export default {
     companyId: String,
   },
   data() {
+     
     return {
+      isPending: false,
+      //=================================
       status: ["Show all", "Show enabled", "Show disabled"],
       rowsPerPage: [10, 20, 50, 100],
       currentRowsPerPage: 10,
@@ -123,8 +146,27 @@ export default {
       items: ["General", "Bank Account"],
     };
   },
-
+  created() {
+    this.$store.dispatch("companies/getCompanyId",
+      this.$route.params.companyId
+    )
+  },
+  //=========================================
   methods: {
+     updateCompany(company) {
+      this.isPending = true;
+      this.$store
+        .dispatch("companies/updateCompany", {
+          companyId: this.$route.params.companyId,
+          company,
+        })
+        .then(() => {
+          this.isPending = false;
+          });
+    },
+  //===========================================
+
+
     changeRow(rowsPerPage) {
       this.currentRowsPerPage = rowsPerPage;
       this.currentPage = 1;
@@ -172,6 +214,9 @@ export default {
   },
   computed: {
     ...mapGetters({
+       company: "companies/selectCompanyUpdate",
+      user: "profile/userGetter",
+      //===========================================
       totalPages: "companySettings/selectTotalPage",
       bankAccounts: "companySettings/selectAllBankAccounts",
     }),
@@ -187,6 +232,7 @@ export default {
       return this.bankAccounts.filter((item) => item.status == DISABLE_STATUS);
     },
   },
+  
 };
 </script>
 

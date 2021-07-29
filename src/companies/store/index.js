@@ -6,9 +6,12 @@ import {
   getCompanies,
   getCompanyById,
   deleteCompanies,
+  updateCompany,
+  getCompanyId
 } from "@/http/companies";
 
 const state = {
+  company: undefined,
   companies: [],
   selectedCompanyId: undefined,
   pagination: {
@@ -19,6 +22,7 @@ const state = {
 };
 
 const getters = {
+  selectCompanyUpdate:(state) => state.company,
   selectAllCompanies: (state) => state.companies,
   selectCompanyPaging: (state) => state.pagination,
   selectSelectedCompanyId: (state) => state.selectedCompanyId,
@@ -62,6 +66,10 @@ const mutations = {
 
   SET_SELECTED_COMPANY_ID(state, selectedCompanyId) {
     state.selectedCompanyId = parseInt(selectedCompanyId);
+  },
+
+  SET_COMPANY(state, company) {
+    state.company = company
   },
 };
 
@@ -113,6 +121,27 @@ const actions = {
   },
   updatePagination({ commit }, pageSize) {
     commit("SET_PAGINATION", { pageSize });
+  },
+
+  updatePage({ commit }, {pageNumber,pageSize}) {
+    commit("SET_PAGINATION", {pageNumber,pageSize});
+  },
+
+  getCompanyId ({commit},companyId){
+    return getCompanyId(companyId).then((response) => {
+      commit("SET_COMPANY", response.data);
+    });
+  },
+
+  updateCompany({ commit }, {companyId,company}){
+    return updateCompany({companyId,company})
+    .then((response) => {
+      commit("SET_COMPANY", response.data);
+      Vue.$toast.success("Company info have been saved.");
+    })
+    .catch((error) => {
+      Vue.$toast.error(error.response.data.errors);
+    });
   },
 };
 
