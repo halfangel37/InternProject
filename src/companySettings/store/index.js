@@ -2,6 +2,9 @@ import {
   getBankAccounts,
   updateStatusBankAccount,
   deleteBankAccount,
+  createBankAccount,
+  getBankAccountById,
+  updateBankAccount,
 } from "@/http/bankAccount.js";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 import NProgress from "nprogress";
@@ -11,11 +14,15 @@ const namespaced = true;
 const state = {
   bankAccounts: [],
   totalPages: 0,
+  bankAccount: undefined,
 };
 
 const mutations = {
   SET_BANK_ACCOUNTS(state, data) {
     state.bankAccounts = data;
+  },
+  SET_BANK_ACCOUNT(state, data) {
+    state.bankAccount = data;
   },
   SET_TOTAL_PAGES(state, totalPages) {
     state.totalPages = totalPages;
@@ -31,6 +38,24 @@ const mutations = {
 };
 
 const actions = {
+  createBankAccount(_, { companyId, bankAccount }) {
+    return createBankAccount({ companyId, bankAccount })
+      .then(() => {
+        Vue.$toast.success("Bank Account have been created.");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors);
+      });
+  },
+  updateBankAccount(_, { companyId, bankAccount, bankAccountId }) {
+    return updateBankAccount({ companyId, bankAccount, bankAccountId })
+      .then(() => {
+        Vue.$toast.success("Bank Account have been updated.");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors);
+      });
+  },
   getBankAccounts({ commit }, { companyId, pageNumber, pageSize }) {
     NProgress.start();
     return getBankAccounts({ companyId, pageNumber, pageSize })
@@ -76,6 +101,11 @@ const actions = {
         Vue.$toast.error(error.response.data.errors[0].message);
       });
   },
+  getBankAccountById({ commit }, { companyId, bankAccountId }) {
+    return getBankAccountById({ companyId, bankAccountId }).then((response) => {
+      commit("SET_BANK_ACCOUNT", response.data);
+    });
+  },
   deleteBankAccount({ commit }, { companyId, bankAccountId }) {
     NProgress.start();
     return deleteBankAccount({ companyId, bankAccountId })
@@ -94,7 +124,6 @@ const actions = {
 const getters = {
   selectAllBankAccounts: (state) => state.bankAccounts,
   selectTotalPage: (state) => state.totalPages,
-  selectSeletedBankAccount: (state) => state.bankAccount,
 };
 
 export default { namespaced, state, mutations, actions, getters };

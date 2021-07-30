@@ -15,93 +15,109 @@
           </v-tab>
         </v-tabs>
         <v-tabs-items
-          class="tabs-items"
+        
           v-model="tab"
-          :class="{ active: tab === 0 }"
+         
         >
-          <v-tab-item v-for="item in items" :key="item">
-         <v-col cols="12" sm="10" md="10" lg="10">
-          <UpdateCompanyForm
-            :isPending="isPending"
-            :company="company"
-            @update-company="updateCompany"
-          />
-        </v-col>
+          <v-tab-item v-for="item in items" :key="item"  :class="{ active: tab === 0 }"   class="tab-item">
+            <v-col cols="12" sm="10" md="10" lg="10">
+              <UpdateCompanyForm
+                :isPending="isPending"
+                :company="company"
+                @update-company="updateCompany"
+              />
+            </v-col>
           </v-tab-item>
         </v-tabs-items>
 
-        <v-tabs-items
-          class="tabs-items"
-          v-model="tab"
-          :class="{ active: tab === 1 }"
-        >
-          <v-tab-item v-for="item in items" :key="item">
-            <div class="d-flex h-40 j-content-space-between header">
-              <CreateButton @onCreate="onCreate" />
-              <div class="w-200">
-                <v-select
-                  dense
-                  :items="status"
-                  :value="currentStatus"
-                  v-on:change="filterStatus"
-                  label="Select"
-                  solo
-                  :append-icon="'mdi-chevron-down'"
-                ></v-select>
-              </div>
-              <span class="d-flex a-items-center mr-5"
-                ><v-icon class="color-light-orange">{{
-                  settingIcon
-                }}</v-icon></span
-              >
-              <div class="d-flex">
-                <span class="d-flex a-items-center mr-5">Rows per page:</span>
-                <div class="w-100">
+         <v-tabs-items v-model="tab">
+          <v-tab-item
+            v-for="item in items"
+            :key="item"
+            class="tab-item"
+            :class="{ active: tab === 1 }"
+          >
+            <div v-if="!createActive && !updateActive">
+              <div class="d-flex h-40 j-content-space-between header">
+                <CreateButton @onCreate="onCreate" />
+                <div class="w-200">
                   <v-select
                     dense
-                    :items="rowsPerPage"
-                    :value="currentRowsPerPage"
+                    :items="status"
+                    :value="currentStatus"
+                    v-on:change="filterStatus"
                     label="Select"
                     solo
-                    v-on:change="changeRow"
                     :append-icon="'mdi-chevron-down'"
                   ></v-select>
                 </div>
-              </div>
-              <div>
-                <v-text-field
-                  dense
-                  outlined
-                  label="Search"
-                  v-model="search"
-                  :append-icon="searchIcon"
+                <span class="d-flex a-items-center mr-5"
+                  ><v-icon class="color-light-orange">{{
+                    settingIcon
+                  }}</v-icon></span
                 >
-                </v-text-field>
+                <div class="d-flex">
+                  <span class="d-flex a-items-center mr-5">Rows per page:</span>
+                  <div class="w-100">
+                    <v-select
+                      dense
+                      :items="rowsPerPage"
+                      :value="currentRowsPerPage"
+                      label="Select"
+                      solo
+                      v-on:change="changeRow"
+                      :append-icon="'mdi-chevron-down'"
+                    ></v-select>
+                  </div>
+                </div>
+                <div>
+                  <v-text-field
+                    dense
+                    outlined
+                    label="Search"
+                    v-model="search"
+                    :append-icon="searchIcon"
+                  >
+                  </v-text-field>
+                </div>
+              </div>
+              <BankAccountsList
+                :bankAccounts="bankAccountsDisplay"
+                :search="search"
+                @changeStatus="changeStatus"
+                @onRowSelect="onRowSelect"
+                @deleteBankAccount="deleteBankAccount"
+              />
+              <div class="mt-5">
+                <v-pagination
+                  circle
+                  @input="next"
+                  previous="prePage"
+                  :total-visible="5"
+                  v-model="currentPage"
+                  :length="totalPages"
+                  v-if="totalPages > 1"
+                >
+                </v-pagination>
               </div>
             </div>
-            <BankAccountsList
-              :bankAccounts="bankAccountsDisplay"
-              :search="search"
-              @changeStatus="changeStatus"
-              @onRowSelect="onRowSelect"
-              @deleteBankAccount="deleteBankAccount"
+
+            <CreateBankAccount
+              v-if="createActive"
+              :isPending="isPending"
+              @create-bank-account="createBankAccount"
+              @cancel-bank-account="cancelBankAccount"
             />
-            <div class="mt-5">
-              <v-pagination
-                circle
-                @input="next"
-                previous="prePage"
-                :total-visible="5"
-                v-model="currentPage"
-                :length="totalPages"
-                v-if="totalPages > 1"
-              >
-              </v-pagination>
-            </div>
+
+            <CreateBankAccount
+              :selectedBankAccount="selectedBankAccount"
+              v-if="updateActive"
+              :isPending="isPending"
+              @update-bank-account="updateBankAccount"
+              @cancel-bank-account="cancelBankAccount"
+            />
           </v-tab-item>
         </v-tabs-items>
-
-        
       </div>
     </template>
   </PageContainer>
@@ -113,8 +129,9 @@ import { mdiMagnify, mdiCogOutline } from "@mdi/js";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import BankAccountsList from "@/companySettings/components/BankAccountsList.vue";
+import CreateBankAccount from "@/companySettings/components/CreateBankAccount.vue";
 import PageContainer from "@/components/PageContainer.vue";
-import UpdateCompanyForm from "@/companySettings/components/UpdateCompanyForm.vue"
+import UpdateCompanyForm from "@/companySettings/components/UpdateCompanyForm.vue";
 import CreateButton from "@/components/CreateButton.vue";
 import { ENABLE_STATUS, DISABLE_STATUS } from "@/shared/variables/index";
 export default {
@@ -123,15 +140,13 @@ export default {
     UpdateCompanyForm,
     CreateButton,
     PageContainer,
+    CreateBankAccount,
   },
   props: {
     companyId: String,
   },
   data() {
-     
     return {
-      isPending: false,
-      //=================================
       status: ["Show all", "Show enabled", "Show disabled"],
       rowsPerPage: [10, 20, 50, 100],
       currentRowsPerPage: 10,
@@ -144,16 +159,21 @@ export default {
       search: "",
       tab: null,
       items: ["General", "Bank Account"],
+      isPending: false,
+      createActive: false,
+      updateActive: false,
+      selectedBankAccount: undefined,
     };
   },
   created() {
-    this.$store.dispatch("companies/getCompanyId",
+    this.$store.dispatch(
+      "companies/getCompanyId",
       this.$route.params.companyId
-    )
+    );
   },
-  //=========================================
+
   methods: {
-     updateCompany(company) {
+    updateCompany(company) {
       this.isPending = true;
       this.$store
         .dispatch("companies/updateCompany", {
@@ -162,10 +182,8 @@ export default {
         })
         .then(() => {
           this.isPending = false;
-          });
+        });
     },
-  //===========================================
-
 
     changeRow(rowsPerPage) {
       this.currentRowsPerPage = rowsPerPage;
@@ -204,19 +222,51 @@ export default {
       });
     },
     onRowSelect(bankAccount) {
-      this.$router.push({
-        path: `bank-accounts/${bankAccount.id}`,
-      });
+      this.selectedBankAccount = bankAccount;
+      this.updateActive = true;
     },
     onCreate() {
-      this.$router.push({ name: "createBankAccount" });
+      this.createActive = true;
+    },
+    createBankAccount(bankAccount) {
+      this.isPending = true;
+      this.$store
+        .dispatch("companySettings/createBankAccount", {
+          companyId: this.companyId,
+          bankAccount,
+        })
+        .then(() => {
+          this.isPending = false;
+        });
+    },
+    updateBankAccount(bankAccount) {
+      this.isPending = true;
+      this.$store
+        .dispatch("companySettings/updateBankAccount", {
+          companyId: this.companyId,
+          bankAccount,
+          bankAccountId: bankAccount.id,
+        })
+        .then(() => {
+          this.isPending = false;
+        });
+    },
+    cancelBankAccount() {
+      this.createActive = false;
+      this.updateActive = false;
+      store.dispatch("companySettings/getBankAccounts", {
+        pageNumber: this.currentPage,
+        pageSize: this.currentRowsPerPage,
+        companyId: this.companyId,
+      });
     },
   },
+
   computed: {
     ...mapGetters({
-       company: "companies/selectCompanyUpdate",
+      company: "companies/selectCompanyUpdate",
       user: "profile/userGetter",
-      //===========================================
+
       totalPages: "companySettings/selectTotalPage",
       bankAccounts: "companySettings/selectAllBankAccounts",
     }),
@@ -232,7 +282,6 @@ export default {
       return this.bankAccounts.filter((item) => item.status == DISABLE_STATUS);
     },
   },
-  
 };
 </script>
 
@@ -240,13 +289,15 @@ export default {
 .tabs {
   margin-bottom: 2rem;
 }
-.tabs-items {
+.tab-item {
   display: none;
 }
 .active {
   display: block;
 }
-
+.create-form {
+  display: none;
+}
 .color-light-orange {
   color: #df7f01;
 }

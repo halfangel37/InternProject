@@ -6,6 +6,7 @@ const getBankAccounts = ({ companyId, pageNumber, pageSize }) => {
     params: { pageSize, pageNumber },
   });
 };
+
 const updateStatusBankAccount = ({
   companyId,
   bankAccountId,
@@ -28,4 +29,32 @@ const deleteBankAccount = ({ companyId, bankAccountId }) => {
     `${COMPANY}/${companyId}${BANK_ACCOUNTS}/${bankAccountId}`
   );
 };
-export { getBankAccounts, updateStatusBankAccount, deleteBankAccount };
+
+const getBankAccountById = ({ companyId, bankAccountId }) => {
+  return httpClient.get(
+    `${COMPANY}/${companyId}${BANK_ACCOUNTS}/${bankAccountId}`
+  );
+};
+
+const createBankAccount = ({ companyId, bankAccount }) => {
+  return httpClient.post(
+    `${COMPANY}/${companyId}${BANK_ACCOUNTS}`,
+    bankAccount
+  );
+};
+
+const updateBankAccount = ({ companyId, bankAccount, bankAccountId }) => {
+  return httpClient.put(
+    `${COMPANY}/${companyId}${BANK_ACCOUNTS}/${bankAccountId}`,
+    bankAccount
+  );
+};
+
+export {
+  getBankAccounts,
+  updateStatusBankAccount,
+  deleteBankAccount,
+  createBankAccount,
+  getBankAccountById,
+  updateBankAccount,
+};
