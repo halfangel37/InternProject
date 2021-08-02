@@ -177,10 +177,8 @@ export default {
       );
     },
   },
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    this.$store.dispatch("contacts/clearStates").then(() => {
-      next();
-    });
+  beforeDestroy() {
+    this.$store.dispatch("contacts/clearStates")
   },
 };
 </script>

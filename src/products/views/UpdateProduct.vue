@@ -6,12 +6,14 @@
         <v-row>
           <v-col cols="12" sm="10" md="10" lg="10">
             <UpdateProductForm
+              v-show="product"
               :isPending="isPending"
               :product="product"
               :user="user"
               @update-product="updateProduct"
               @update-product-image="updateProductImage"
             />
+            <p v-show="!product" class="mt-10 box">Product is not found</p>
           </v-col>
         </v-row>
       </v-container>
@@ -56,10 +58,8 @@ export default {
     },
   },
 
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    this.$store.dispatch("products/clearStates").then(() => {
-      next();
-    });
+ beforeDestroy() {
+    this.$store.dispatch("products/clearStates");
   },
   computed: {
     ...mapGetters({
@@ -71,8 +71,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .form-container {
   padding: 0;
+}
+.box {
+  width: 1000px;
+  background: #fdf4e3;
+  padding: 10px;
 }
 </style>

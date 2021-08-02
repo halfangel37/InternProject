@@ -39,6 +39,7 @@ const mutations = {
   CLEAR_STATES(state) {
     state.totalPages = 0;
     state.employees = [];
+    state.employee = undefined;
   },
 
   SET_EMPLOYEE(state, employee) {

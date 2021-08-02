@@ -58,17 +58,16 @@ const routes = [
       },
       {
         path: "/",
-        component: () =>
-          import ("../companies/views/ListCompaniesPage.vue"),
-          beforeEnter(routeTo, routeFrom, next) {
-            store
-              .dispatch("companies/getCompanies", {
-                pageNumber: 1,
-                pageSize: 10,
-              })
-              // TODO handle error
-              .then(() => next());
-          },
+        component: () => import("../companies/views/ListCompaniesPage.vue"),
+        beforeEnter(routeTo, routeFrom, next) {
+          store
+            .dispatch("companies/getCompanies", {
+              pageNumber: 1,
+              pageSize: 10,
+            })
+            // TODO handle error
+            .then(() => next());
+        },
       },
       {
         path: "companies",
@@ -91,13 +90,7 @@ const routes = [
             component: () =>
               import("../companies/views/RegisterCompanyPage.vue"),
           },
-          {
-            path: ":companyId/setting/general",
-            // name: "ProductDetail",
-            props: true,
-            component: () =>
-              import ("../companies/views/UpdateCompany.vue"),
-          },
+
           {
             path: ":companyId",
             component: Content,
@@ -107,7 +100,10 @@ const routes = [
                 "companies/selectCompany",
                 routeTo.params.companyId
               );
-
+              store.dispatch(
+                "companies/getCompanyId",
+                routeTo.params.companyId
+              );
               store
                 .dispatch("companies/getCompanyById", routeTo.params.companyId)
                 // TODO handle error
@@ -203,6 +199,19 @@ const routes = [
                     props: true,
                     component: () =>
                       import("../products/views/UpdateProduct.vue"),
+                    beforeEnter(routeTo, routeFrom, next) {
+                      store
+                        .dispatch("products/getProductById", {
+                          companyId: routeTo.params.companyId,
+                          productId: routeTo.params.productId,
+                        })
+                        .then(() => {
+                          next();
+                        })
+                        .catch(() => {
+                          next();
+                        });
+                    },
                   },
                 ],
               },

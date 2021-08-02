@@ -49,11 +49,15 @@ export default {
       employee: "employees/selectSeletedEmployee",
     }),
   },
+
   created() {
     this.$store.dispatch("employees/getEmployeeById", {
       companyId: this.$route.params.companyId,
       employeeId: this.$route.params.employeeId,
     });
+  },
+  beforeDestroy() {
+    this.$store.dispatch("employees/clearStates");
   },
 };
 </script>

@@ -43,6 +43,7 @@ const mutations = {
     state.contacts.splice(index, 1);
   },
   CLEAR_STATES(state) {
+    state.contact = undefined;
     state.contacts = [];
     state.pagination = {
       pageNumber: 1,

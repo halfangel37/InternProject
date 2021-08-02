@@ -1,5 +1,6 @@
 <template>
   <v-form @submit.prevent="onSubmit" ref="updateCompanyForm" class="form">
+    
     <v-text-field
       v-model="companyCopy.name"
       label="Name"

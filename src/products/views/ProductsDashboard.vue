@@ -196,13 +196,14 @@ export default {
     importFile(e) {
       this.isPending = true;
       this.selectedFileProduct = e.target.files[0];
-      this.$store.dispatch("products/importFileProduct", {
-        companyId: this.companyId,
-        fileProducts: this.selectedFileProduct,
-      })
-      .then(() => {
+      this.$store
+        .dispatch("products/importFileProduct", {
+          companyId: this.companyId,
+          fileProducts: this.selectedFileProduct,
+        })
+        .then(() => {
           this.isPending = false;
-      });
+        });
     },
 
     exportFile() {
@@ -231,10 +232,8 @@ export default {
     },
   },
 
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    this.$store.dispatch("products/clearStates").then(() => {
-      next();
-    });
+  beforeDestroy() {
+    this.$store.dispatch("products/clearStates");
   },
 };
 </script>

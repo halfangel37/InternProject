@@ -14,23 +14,29 @@
             {{ item }}
           </v-tab>
         </v-tabs>
-        <v-tabs-items
-        
-          v-model="tab"
-         
-        >
-          <v-tab-item v-for="item in items" :key="item"  :class="{ active: tab === 0 }"   class="tab-item">
+        <v-tabs-items v-model="tab">
+          <v-tab-item
+            v-for="item in items"
+            :key="item"
+            :class="{ active: tab === 0 }"
+            class="tab-item"
+          >
             <v-col cols="12" sm="10" md="10" lg="10">
               <UpdateCompanyForm
+                v-show="company"
                 :isPending="isPending"
                 :company="company"
                 @update-company="updateCompany"
               />
+              <p v-show="!company" class="mt-10 box">
+                Company is not found,
+                <router-link to="/dashboard">return to dashboard</router-link>
+              </p>
             </v-col>
           </v-tab-item>
         </v-tabs-items>
 
-         <v-tabs-items v-model="tab">
+        <v-tabs-items v-model="tab">
           <v-tab-item
             v-for="item in items"
             :key="item"
@@ -166,6 +172,7 @@ export default {
     };
   },
   created() {
+  
     this.$store.dispatch(
       "companies/getCompanyId",
       this.$route.params.companyId
@@ -266,7 +273,7 @@ export default {
     ...mapGetters({
       company: "companies/selectCompanyUpdate",
       user: "profile/userGetter",
-
+      selectedCompanyId: "companies/selectSelectedCompanyId",
       totalPages: "companySettings/selectTotalPage",
       bankAccounts: "companySettings/selectAllBankAccounts",
     }),
@@ -306,5 +313,10 @@ export default {
 }
 .max-width {
   max-width: 200px;
+}
+.box {
+  width: 1000px;
+  background: #fdf4e3;
+  padding: 10px;
 }
 </style>

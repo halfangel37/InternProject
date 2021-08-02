@@ -156,10 +156,8 @@ export default {
       this.$router.push({ name: "CreateEmployee" });
     },
   },
-  beforeRouteLeave(routeTo, routeFrom, next) {
-    this.$store.dispatch("employees/clearStates").then(() => {
-      next();
-    });
+  beforeDestroy() {
+    this.$store.dispatch("employees/clearStates");
   },
 };
 </script>

@@ -7,7 +7,7 @@ import {
   getCompanyById,
   deleteCompanies,
   updateCompany,
-  getCompanyId
+  getCompanyId,
 } from "@/http/companies";
 
 const state = {
@@ -22,7 +22,7 @@ const state = {
 };
 
 const getters = {
-  selectCompanyUpdate:(state) => state.company,
+  selectCompanyUpdate: (state) => state.company,
   selectAllCompanies: (state) => state.companies,
   selectCompanyPaging: (state) => state.pagination,
   selectSelectedCompanyId: (state) => state.selectedCompanyId,
@@ -69,7 +69,7 @@ const mutations = {
   },
 
   SET_COMPANY(state, company) {
-    state.company = company
+    state.company = company;
   },
 };
 
@@ -107,9 +107,13 @@ const actions = {
   },
 
   getCompanyById({ commit }, companyId) {
-    return getCompanyById(companyId).then((response) => {
-      commit("UPSERT_ONE_COMPANY", response.data);
-    });
+    return getCompanyById(companyId)
+      .then((response) => {
+        commit("UPSERT_ONE_COMPANY", response.data);
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors[0].message);
+      });
   },
 
   registerCompany(_, companyInfor) {
@@ -123,25 +127,25 @@ const actions = {
     commit("SET_PAGINATION", { pageSize });
   },
 
-  updatePage({ commit }, {pageNumber,pageSize}) {
-    commit("SET_PAGINATION", {pageNumber,pageSize});
+  updatePage({ commit }, { pageNumber, pageSize }) {
+    commit("SET_PAGINATION", { pageNumber, pageSize });
   },
 
-  getCompanyId ({commit},companyId){
+  getCompanyId({ commit }, companyId) {
     return getCompanyId(companyId).then((response) => {
       commit("SET_COMPANY", response.data);
     });
   },
 
-  updateCompany({ commit }, {companyId,company}){
-    return updateCompany({companyId,company})
-    .then((response) => {
-      commit("SET_COMPANY", response.data);
-      Vue.$toast.success("Company info have been saved.");
-    })
-    .catch((error) => {
-      Vue.$toast.error(error.response.data.errors);
-    });
+  updateCompany({ commit }, { companyId, company }) {
+    return updateCompany({ companyId, company })
+      .then((response) => {
+        commit("SET_COMPANY", response.data);
+        Vue.$toast.success("Company info have been saved.");
+      })
+      .catch((error) => {
+        Vue.$toast.error(error.response.data.errors);
+      });
   },
 };
 
