@@ -1,5 +1,5 @@
 # painite
-
+Eztek Intern Project with Vuejs , work with 3 other interns.
 ## Project setup
 ```
 yarn install
